@@ -561,7 +561,7 @@ const ActivityCard = ({ colors }) => {
               </div>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
                 <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>22%</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your body fat percentage<br/>is at an ideal level</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your body fat is at<br/>an ideal level</div>
               </div>
             </div>
           </div>
