@@ -568,8 +568,8 @@ const ActivityCard = ({ colors }) => {
 
           <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, padding: '1.8rem', borderRadius: '24px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
             <div style={{ position: 'relative', zIndex: 2 }}>
-              <h4 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.8rem', lineHeight: '1.3' }}>Set and Achieve Your Health Goals!</h4>
-              <p style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '2rem' }}>Your Goal: Lose 3kg in 1 month</p>
+              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.4rem', lineHeight: '1.3' }}>Set and Achieve Your Health Goals!</h4>
+              <p style={{ fontSize: '0.8rem', opacity: 0.9, marginBottom: '1.2rem' }}>Your Goal: Lose 3kg in 1 month</p>
               <button style={{ background: 'white', color: colors[0], border: 'none', padding: '10px 20px', borderRadius: '14px', fontSize: '0.85rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>Adjust My Goal <ArrowRight size={16} /></button>
             </div>
             <div style={{ position: 'absolute', right: '-10px', bottom: '-10px', width: '140px', height: '140px', background: 'rgba(255,255,255,0.15)', borderRadius: '50%' }}></div>
