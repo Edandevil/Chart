@@ -12,7 +12,7 @@
   --warning: #f59e0b;
   --success: #10b981;
   --font-main: 'Inter', sans-serif;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
 }
 
 * {
@@ -231,9 +231,20 @@ body {
   margin-bottom: 1rem;
 }
 
-.tag-immediate { background: #fee2e2; color: #ef4444; }
-.tag-nearterm { background: #fef3c7; color: #d97706; }
-.tag-strategic { background: #dbeafe; color: #2563eb; }
+.tag-immediate {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.tag-nearterm {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.tag-strategic {
+  background: #dbeafe;
+  color: #2563eb;
+}
 
 .q-card h3 {
   font-size: 1.1rem;
@@ -256,11 +267,12 @@ body {
 /* Overview Section */
 .section-panel {
   background: white;
-  border-radius: 24px;
+  border-radius: 12px;
   padding: 2rem;
   box-shadow: var(--shadow);
   margin-bottom: 2rem;
-  overflow: hidden; /* Added to contain potential children overflow */
+  overflow: hidden;
+  /* Added to contain potential children overflow */
 }
 
 .section-header {
@@ -292,7 +304,8 @@ body {
 }
 
 .chart-item {
-  min-width: 0; /* Important for grid shrinkage */
+  min-width: 0;
+  /* Important for grid shrinkage */
 }
 
 .chart-item h4 {
@@ -344,10 +357,21 @@ body {
 }
 
 /* Progress Fill Colors */
-.fill-red { background: #ef4444; }
-.fill-orange { background: #f97316; }
-.fill-yellow { background: #facc15; }
-.fill-green { background: #10b981; }
+.fill-red {
+  background: #ef4444;
+}
+
+.fill-orange {
+  background: #f97316;
+}
+
+.fill-yellow {
+  background: #facc15;
+}
+
+.fill-green {
+  background: #10b981;
+}
 
 /* Pulse Section */
 .pulse-grid {

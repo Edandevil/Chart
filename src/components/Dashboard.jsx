@@ -424,7 +424,7 @@ const GoalTrackerCard = ({ colors }) => {
 
 const VitalStatsCard = ({ colors }) => {
   return (
-    <div className="section-panel" style={{ padding: 0, overflow: 'hidden', height: '100%', border: 'none', borderRadius: '28px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+    <div className="section-panel" style={{ padding: 0, overflow: 'hidden', border: 'none', borderRadius: '28px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', marginBottom: 0 }}>
       <div style={{ background: colors[0], padding: '2rem 1.5rem 1.5rem', color: 'white' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -452,8 +452,8 @@ const VitalStatsCard = ({ colors }) => {
       <div style={{ padding: '2rem 1.5rem' }}>
         <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111827', marginBottom: '1.5rem' }}>Report Details</h4>
         <div style={{ fontSize: '3rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem' }}>75% <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af' }}>of the healthy limit</span></div>
-        <div style={{ marginTop: '2.5rem' }}>
-          <div style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 800, marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>REMINDER:</div>
+        <div style={{ marginTop: '1.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 800, marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>REMINDER:</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Calendar size={18} strokeWidth={2.5} /> Next check-up</div>
@@ -483,8 +483,8 @@ const ActivityCard = ({ colors }) => {
   ];
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', marginBottom: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[4]}22`, color: colors[4], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Activity size={20} strokeWidth={2.5} /></div>
@@ -496,7 +496,7 @@ const ActivityCard = ({ colors }) => {
             ))}
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
           {cards.map((card, i) => (
             <div key={i} style={{ background: '#f9fafb', padding: '1.5rem', borderRadius: '20px', border: '1px solid #f3f4f6' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.2rem' }}>
@@ -510,9 +510,9 @@ const ActivityCard = ({ colors }) => {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.5rem', flex: 1 }}>
-        <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '20px', alignItems: 'start' }}>
+        <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', marginBottom: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[2]}22`, color: colors[2], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Smile size={20} strokeWidth={2.5} /></div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Mental Health Score</h3>
@@ -528,7 +528,7 @@ const ActivityCard = ({ colors }) => {
                 <div style={{ fontSize: '0.8rem', color: '#9ca3af', fontWeight: 600 }}>Mental Health Score</div>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', width: '100%', gap: '3rem', marginTop: '3.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', width: '100%', gap: '20px', marginTop: '2.5rem' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: '#9ca3af', fontWeight: 600, marginBottom: '8px' }}>
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors[1] }} /> Mindfulness
@@ -545,16 +545,16 @@ const ActivityCard = ({ colors }) => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', marginBottom: 0 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[3]}22`, color: colors[3], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Scale size={20} strokeWidth={2.5} /></div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Body Composition</h3>
               </div>
               <ArrowRight size={20} color="#9ca3af" />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
                 <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>68 <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Kg</span></div>
                 <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your weight is within a healthy range</div>
@@ -596,7 +596,7 @@ const DashboardOverview = ({ palette }) => {
   return (
     <div className="container" style={{ minWidth: 0 }}>
       {/* Banner */}
-      <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, borderRadius: '16px', padding: '2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, borderRadius: '16px', padding: '2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
           <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Google Ads Account Audit <span style={{ fontSize: '0.7rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>DEMO</span></h2>
           <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Account: <b>XXXX</b> • Vertical: <b>Furniture Retail (Local)</b> • Window: <b>Last 30 days</b></div>
@@ -636,7 +636,7 @@ const DashboardOverview = ({ palette }) => {
       </div>
 
       {/* Health Tracker Row (REFINED) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: '1.5rem', marginBottom: '2.5rem', minWidth: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: '20px', marginBottom: '20px', minWidth: 0, alignItems: 'start' }}>
         <VitalStatsCard colors={colors} />
         <ActivityCard colors={colors} />
       </div>
