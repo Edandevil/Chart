@@ -454,7 +454,7 @@ const VitalStatsCard = ({ colors }) => {
         <div style={{ fontSize: '3rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem' }}>75% <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af' }}>of the healthy limit</span></div>
         <div style={{ marginTop: '1.5rem' }}>
           <div style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 800, marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>REMINDER:</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Calendar size={18} strokeWidth={2.5} /> Next check-up</div>
               <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>28 Feb 2025</span>
