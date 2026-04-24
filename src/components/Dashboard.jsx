@@ -557,11 +557,11 @@ const ActivityCard = ({ colors }) => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
                 <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>68 <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Kg</span></div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your weight is within a healthy range</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your weight is within<br/>a healthy range</div>
               </div>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
                 <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>22%</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your body fat percentage is at an ideal level</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your body fat percentage<br/>is at an ideal level</div>
               </div>
             </div>
           </div>
