@@ -651,7 +651,7 @@ const DashboardOverview = ({ palette }) => {
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>FINDINGS BY SEVERITY</h4>
-            <div style={{ height: 220, marginTop: '20px' }}><Doughnut data={{ labels: ['Critical', 'High', 'Medium', 'Strength'], datasets: [{ data: [3, 4, 3, 2], backgroundColor: ['#991b1b', '#d97706', '#fbbf24', colors[2]], borderWidth: 0, cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 220, marginTop: '20px' }}><Doughnut data={{ labels: ['Critical', 'High', 'Medium', 'Strength'], datasets: [{ data: [3, 4, 3, 2], backgroundColor: ['#991b1b', '#d97706', '#fbbf24', colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CATEGORY SCORE VS TARGET</h4>
@@ -699,7 +699,7 @@ const DashboardOverview = ({ palette }) => {
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>MATCH TYPE MIX (SPEND-WEIGHTED)</h4>
-            <div style={{ height: 220 }}><Doughnut data={{ labels: ['Phrase', 'Broad', 'Exact'], datasets: [{ data: [45, 50, 5], backgroundColor: [colors[0], colors[1], colors[2]], borderWidth: 0, cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 220 }}><Doughnut data={{ labels: ['Phrase', 'Broad', 'Exact'], datasets: [{ data: [45, 50, 5], backgroundColor: [colors[0], colors[1], colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
             <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px', textAlign: 'center' }}>Broad dominates — shift converting terms to exact.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
@@ -744,7 +744,7 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>DEVICE MIX (SPEND)</h4>
-            <div style={{ height: 180 }}><Doughnut data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [70, 15, 10, 5], backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 0, cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 180 }}><Doughnut data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [70, 15, 10, 5], backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>ROAS BY DEVICE</h4>
