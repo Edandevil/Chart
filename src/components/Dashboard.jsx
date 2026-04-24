@@ -243,7 +243,7 @@ const ThemeSwitcher = ({ palettes, setPalettes, activePalette, setActivePalette 
 };
 
 const ScoreCard = ({ label, value, color, subtext }) => (
-  <div className="section-panel" style={{ padding: '1.25rem', minWidth: 0 }}>
+  <div style={{ padding: '1.25rem', minWidth: 0, border: '1px solid #e5e7eb', borderRadius: '12px', background: '#fff' }}>
     <h5 style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#6b7280', marginBottom: '8px' }}>{label}</h5>
     <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#111827', marginBottom: '4px' }}>{value}</div>
     <div className="progress-bar" style={{ height: '4px', background: '#f3f4f6', borderRadius: '2px', marginBottom: '8px' }}>
