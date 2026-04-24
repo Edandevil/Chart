@@ -18,7 +18,8 @@ import {
   LayoutDashboard, Table as TableIcon, PieChart as PieIcon, TrendingUp, 
   Settings, Download, RefreshCw, Pin, X, ChevronDown, 
   Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight,
-  Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink
+  Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink,
+  Wallet, Activity, Target
 } from 'lucide-react';
 
 // Register ChartJS components
@@ -292,6 +293,132 @@ const Heatmap = ({ data, palette }) => {
   );
 };
 
+// --- New Finance Cards ---
+
+const CostAnalysisCard = ({ colors }) => {
+  const items = [
+    { name: 'Housing', pct: 18, color: colors[1] },
+    { name: 'Debt payments', pct: 7, color: colors[2] },
+    { name: 'Food', pct: 6, color: colors[3] },
+    { name: 'Transportation', pct: 9, color: colors[4] },
+    { name: 'Healthcare', pct: 10, color: colors[5] },
+    { name: 'Investments', pct: 17, color: colors[6] },
+    { name: 'Other', pct: 33, color: '#f3f4f6' },
+  ];
+
+  return (
+    <div className="section-panel" style={{ padding: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+        <div>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Cost analysis</h3>
+          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Spending overview</div>
+        </div>
+        <div style={{ background: '#f9fafb', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '5px' }}>January <ChevronDown size={14} /></div>
+      </div>
+      <div style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1.5rem' }}>$8,450</div>
+      <div style={{ height: '30px', display: 'flex', gap: '4px', borderRadius: '8px', overflow: 'hidden', marginBottom: '1.5rem' }}>
+        {items.map((item, i) => (
+          <div key={i} style={{ width: `${item.pct}%`, background: item.color }} />
+        ))}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {items.map((item, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: 10, height: 10, borderRadius: '2px', background: item.color }} />
+              <span style={{ color: '#4b5563' }}>{item.name}</span>
+            </div>
+            <span style={{ fontWeight: 600 }}>{item.pct}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const FinancialHealthCard = ({ colors }) => {
+  return (
+    <div className="section-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+        <div>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Financial health</h3>
+          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Current status</div>
+        </div>
+        <div style={{ background: '#f9fafb', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '5px' }}>30d <ChevronDown size={14} /></div>
+      </div>
+      <div style={{ fontSize: '2rem', fontWeight: 800 }}>$15,780</div>
+      <div style={{ fontSize: '0.85rem', color: colors[2], display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '1.5rem' }}>
+        <TrendingUp size={16} /> 17.5% <span style={{ color: '#6b7280' }}>from last month</span>
+      </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        <div style={{ width: '220px', height: '110px', overflow: 'hidden', position: 'relative' }}>
+          <div style={{ width: '220px', height: '220px', borderRadius: '50%', border: '25px solid #f3f4f6', position: 'absolute', top: 0 }}></div>
+          <div style={{ width: '220px', height: '220px', borderRadius: '50%', border: '25px solid transparent', borderTopColor: colors[2], borderLeftColor: colors[2], position: 'absolute', top: 0, transform: 'rotate(45deg)' }}></div>
+          <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', textAlign: 'center' }}>
+            <div style={{ fontSize: '1.75rem', fontWeight: 800 }}>75%</div>
+            <div style={{ fontSize: '0.65rem', color: '#6b7280' }}>Of monthly income saved</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ marginTop: 'auto', fontSize: '0.8rem', color: '#6b7280', lineHeight: '1.4' }}>Based on aggregated transaction metrics over the past 30 days</div>
+    </div>
+  );
+};
+
+const GoalTrackerCard = ({ colors }) => {
+  const goals = [
+    { name: 'Reserve', current: 7000, target: 10000, time: 'Left to save 4 months', color: colors[2], icon: <Wallet size={18} /> },
+    { name: 'Travel', current: 2500, target: 4000, time: 'Left to save 3 months', color: colors[1], icon: <Download size={18} /> },
+    { name: 'Car', current: 1600, target: 20000, time: 'Left to save 3 years 6 months', color: colors[1], icon: <Activity size={18} /> },
+    { name: 'Real estate', current: 8300, target: 70000, time: 'Left to save 5 years 8 months', color: colors[1], icon: <Target size={18} /> },
+  ];
+
+  return (
+    <div className="section-panel" style={{ padding: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Goal tracker</h3>
+        <button style={{ background: '#f9fafb', border: '1px solid #e5e7eb', padding: '6px 12px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><Plus size={14} /> Add goals</button>
+      </div>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>This year</div>
+        {goals.slice(0, 1).map((goal, i) => (
+          <div key={i} style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+            <div style={{ width: 48, height: 48, borderRadius: '12px', background: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f3f4f6' }}>{goal.icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '0.85rem' }}>
+                <span style={{ fontWeight: 700 }}>{goal.name}</span>
+                <span style={{ color: '#6b7280' }}>${goal.current.toLocaleString()}/${goal.target.toLocaleString()}</span>
+              </div>
+              <div style={{ height: '8px', background: '#f3f4f6', borderRadius: '4px', marginBottom: '5px' }}>
+                <div style={{ height: '100%', width: `${(goal.current / goal.target) * 100}%`, background: goal.color, borderRadius: '4px' }} />
+              </div>
+              <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{goal.time}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Long term</div>
+        {goals.slice(1).map((goal, i) => (
+          <div key={i} style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+            <div style={{ width: 48, height: 48, borderRadius: '12px', background: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f3f4f6' }}>{goal.icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '0.85rem' }}>
+                <span style={{ fontWeight: 700 }}>{goal.name}</span>
+                <span style={{ color: '#6b7280' }}>${goal.current.toLocaleString()}/${goal.target.toLocaleString()}</span>
+              </div>
+              <div style={{ height: '8px', background: '#f3f4f6', borderRadius: '4px', marginBottom: '5px' }}>
+                <div style={{ height: '100%', width: `${(goal.current / goal.target) * 100}%`, background: goal.color, borderRadius: '4px' }} />
+              </div>
+              <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{goal.time}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const DashboardOverview = ({ palette }) => {
   const colors = palette.colors;
 
@@ -326,6 +453,13 @@ const DashboardOverview = ({ palette }) => {
             <div style={{ color: colors[2] }}>● 2 Strengths</div>
           </div>
         </div>
+      </div>
+
+      {/* New Finance Cards Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
+        <CostAnalysisCard colors={colors} />
+        <FinancialHealthCard colors={colors} />
+        <GoalTrackerCard colors={colors} />
       </div>
 
       {/* Opportunities */}
