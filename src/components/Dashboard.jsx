@@ -583,6 +583,37 @@ const ActivityCard = ({ colors }) => {
 const BarChartsPage = ({ palette }) => {
   const colors = palette.colors;
 
+  return (
+    <div className="container" style={{ minWidth: 0 }}>
+      <div className="section-panel" style={{ padding: '2rem' }}>
+        <div className="section-header"><h2>All Bar Charts</h2></div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>CATEGORY SCORE VS TARGET</h4>
+            <div style={{ height: 260 }}><Bar data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100 } } }} /></div>
+          </div>
+          
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>QUALITY SCORE DISTRIBUTION</h4>
+            <div style={{ height: 260 }}><Bar data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>ROAS BY DEVICE</h4>
+            <div style={{ height: 200 }}><Bar data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>CONVERSIONS BY HOUR</h4>
+            <div style={{ height: 200 }}><Bar data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>CONVERSIONS BY DAY</h4>
+            <div style={{ height: 200 }}><Bar data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
+          </div>
+        </div>
       </div>
     </div>
   );
