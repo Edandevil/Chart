@@ -19,7 +19,8 @@ import {
   Settings, Download, RefreshCw, Pin, X, ChevronDown, 
   Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight,
   Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink,
-  Wallet, Activity, Target, Heart, Footprints, Flame, Moon, Smile, Scale, Calendar, Droplets, Dumbbell
+  Wallet, Activity, Target, Heart, Footprints, Flame, Moon, Smile, Scale, Calendar, Droplets, Dumbbell,
+  Clock
 } from 'lucide-react';
 
 // Register ChartJS components
@@ -293,7 +294,7 @@ const Heatmap = ({ data, palette }) => {
   );
 };
 
-// --- New Finance Cards ---
+// --- Finance Cards ---
 
 const CostAnalysisCard = ({ colors }) => {
   const items = [
@@ -419,52 +420,52 @@ const GoalTrackerCard = ({ colors }) => {
   );
 };
 
-// --- New Health Tracker Modules ---
+// --- Health Tracker Modules (MATCHING REFERENCE) ---
 
 const VitalStatsCard = ({ colors }) => {
   return (
-    <div className="section-panel" style={{ padding: 0, overflow: 'hidden', height: '100%' }}>
-      <div style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, padding: '1.5rem', color: 'white' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: 36, height: 36, borderRadius: '10px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Heart size={20} /></div>
-            <span style={{ fontWeight: 700 }}>Vital Stats</span>
+    <div className="section-panel" style={{ padding: 0, overflow: 'hidden', height: '100%', border: 'none', borderRadius: '28px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+      <div style={{ background: colors[0], padding: '2rem 1.5rem 1.5rem', color: 'white' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: 42, height: 42, borderRadius: '14px', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Heart size={22} fill="white" /></div>
+            <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Vital Stats</span>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: '5px' }}>Cholesterol <ChevronDown size={14} /></div>
+          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: '10px', fontSize: '0.75rem', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>Cholesterol <ChevronDown size={14} /></div>
         </div>
-        <div style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '1rem' }}>150/200 <span style={{ fontSize: '0.9rem', fontWeight: 400, opacity: 0.8 }}>mg/dL</span></div>
-        <div style={{ height: '24px', display: 'flex', gap: '3px', marginBottom: '0.5rem' }}>
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div key={i} style={{ flex: 1, background: i < 15 ? 'white' : 'rgba(255,255,255,0.2)', borderRadius: '2px' }} />
+        <div style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '1.2rem', letterSpacing: '-0.02em' }}>150/200 <span style={{ fontSize: '1rem', fontWeight: 400, opacity: 0.7 }}>mg/dL</span></div>
+        <div style={{ height: '28px', display: 'flex', gap: '4px', marginBottom: '0.8rem' }}>
+          {Array.from({ length: 18 }).map((_, i) => (
+            <div key={i} style={{ flex: 1, background: i < 12 ? 'white' : 'rgba(255,255,255,0.25)', borderRadius: '3px' }} />
           ))}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', opacity: 0.8 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', opacity: 0.6, fontWeight: 600 }}>
           <span>0</span>
           <span>100</span>
           <span>200</span>
         </div>
-        <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.8rem' }}>Cholesterol level:</span>
-          <span style={{ background: '#dcfce7', color: '#166534', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 700 }}>● Normal</span>
+        <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Cholesterol level:</span>
+          <span style={{ background: '#fff', color: '#166534', padding: '4px 12px', borderRadius: '14px', fontSize: '0.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: 6, height: 6, borderRadius: '50%', background: '#166534' }} /> Normal</span>
         </div>
       </div>
-      <div style={{ padding: '1.5rem' }}>
-        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '1rem' }}>Report Details</h4>
-        <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#111827' }}>75% <span style={{ fontSize: '0.8rem', fontWeight: 400, color: '#6b7280' }}>of the healthy limit</span></div>
-        <div style={{ marginTop: '1.5rem' }}>
-          <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '12px', textTransform: 'uppercase' }}>Reminder:</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4b5563' }}><Calendar size={16} /> Next check-up</div>
-              <span style={{ fontWeight: 600, color: colors[0] }}>28 Feb 2025</span>
+      <div style={{ padding: '2rem 1.5rem' }}>
+        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111827', marginBottom: '1.5rem' }}>Report Details</h4>
+        <div style={{ fontSize: '3rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem' }}>75% <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af' }}>of the healthy limit</span></div>
+        <div style={{ marginTop: '2.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 800, marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>REMINDER:</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Calendar size={18} strokeWidth={2.5} /> Next check-up</div>
+              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>28 Feb 2025</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4b5563' }}><Droplets size={16} /> Hydrated</div>
-              <span style={{ fontWeight: 600, color: colors[0] }}>3.5L / day</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Droplets size={18} strokeWidth={2.5} /> Hydrated</div>
+              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>3.5L / day</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4b5563' }}><Dumbbell size={16} /> Exercise</div>
-              <span style={{ fontWeight: 600, color: colors[0] }}>30-min jogging</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Dumbbell size={18} strokeWidth={2.5} /> Exercise</div>
+              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>30-min jogging</span>
             </div>
           </div>
         </div>
@@ -483,92 +484,95 @@ const ActivityCard = ({ colors }) => {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div className="section-panel" style={{ padding: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: 36, height: 36, borderRadius: '10px', background: `${colors[4]}22`, color: colors[4], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Activity size={20} /></div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>My Activity</h3>
+      <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[4]}22`, color: colors[4], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Activity size={20} strokeWidth={2.5} /></div>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>My Activity</h3>
           </div>
-          <div style={{ display: 'flex', gap: '5px', background: '#f3f4f6', padding: '4px', borderRadius: '10px' }}>
+          <div style={{ display: 'flex', gap: '8px', background: '#f3f4f6', padding: '5px', borderRadius: '12px' }}>
             {tabs.map((tab, i) => (
-              <div key={i} style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600, background: i === 0 ? 'white' : 'transparent', color: i === 0 ? '#111827' : '#6b7280', cursor: 'pointer', boxShadow: i === 0 ? '0 2px 4px rgba(0,0,0,0.05)' : 'none' }}>{tab}</div>
+              <div key={i} style={{ padding: '8px 16px', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 600, background: i === 0 ? 'white' : 'transparent', color: i === 0 ? '#111827' : '#6b7280', cursor: 'pointer', boxShadow: i === 0 ? '0 2px 8px rgba(0,0,0,0.05)' : 'none' }}>{tab}</div>
             ))}
           </div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
           {cards.map((card, i) => (
-            <div key={i} style={{ background: '#f9fafb', padding: '1.25rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#111827' }}>{card.label}</span>
-                <span style={{ fontSize: '0.7rem', color: card.color, display: 'flex', alignItems: 'center', gap: '4px' }}><RefreshCw size={12} /> {card.time}</span>
+            <div key={i} style={{ background: '#f9fafb', padding: '1.5rem', borderRadius: '20px', border: '1px solid #f3f4f6' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.2rem' }}>
+                <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#111827' }}>{card.label}</span>
+                <span style={{ fontSize: '0.75rem', color: card.color, fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}><Clock size={14} /> {card.time}</span>
               </div>
-              <div style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '1rem' }}>{card.info}</div>
-              <div style={{ fontSize: '1.75rem', fontWeight: 800 }}>{card.value} <span style={{ fontSize: '0.8rem', fontWeight: 400, color: '#9ca3af' }}>{card.unit}</span></div>
+              <div style={{ fontSize: '0.8rem', color: '#9ca3af', marginBottom: '1.2rem' }}>{card.info}</div>
+              <div style={{ fontSize: '2rem', fontWeight: 800 }}>{card.value} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: '#9ca3af' }}>{card.unit}</span></div>
             </div>
           ))}
         </div>
       </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.5rem', flex: 1 }}>
-        <div className="section-panel" style={{ padding: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: 36, height: 36, borderRadius: '10px', background: `${colors[2]}22`, color: colors[2], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Smile size={20} /></div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Mental Health Score</h3>
+        <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[2]}22`, color: colors[2], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Smile size={20} strokeWidth={2.5} /></div>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Mental Health Score</h3>
             </div>
-            <ArrowRight size={18} color="#9ca3af" />
+            <ArrowRight size={20} color="#9ca3af" />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem 0' }}>
-            <div style={{ width: '240px', height: '120px', overflow: 'hidden', position: 'relative' }}>
-              <div style={{ width: '240px', height: '240px', borderRadius: '50%', border: '30px solid #f3f4f6', position: 'absolute', top: 0 }}></div>
-              <div style={{ width: '240px', height: '240px', borderRadius: '50%', border: '30px solid transparent', borderTopColor: colors[2], borderLeftColor: colors[2], position: 'absolute', top: 0, transform: 'rotate(45deg)' }}></div>
+            <div style={{ width: '280px', height: '140px', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ width: '280px', height: '280px', borderRadius: '50%', border: '40px solid #f3f4f6', position: 'absolute', top: 0 }}></div>
+              <div style={{ width: '280px', height: '280px', borderRadius: '50%', border: '40px solid transparent', borderTopColor: colors[1], borderLeftColor: colors[1], position: 'absolute', top: 0, transform: 'rotate(45deg)' }}></div>
               <div style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)', textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 800 }}>78<span style={{ fontSize: '0.9rem', opacity: 0.6 }}>/100</span></div>
-                <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Mental Health Score</div>
+                <div style={{ fontSize: '2.4rem', fontWeight: 800 }}>78<span style={{ fontSize: '1rem', opacity: 0.5 }}>/100</span></div>
+                <div style={{ fontSize: '0.8rem', color: '#9ca3af', fontWeight: 600 }}>Mental Health Score</div>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', width: '100%', gap: '2rem', marginTop: '2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', width: '100%', gap: '3rem', marginTop: '3.5rem' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: '#6b7280', marginBottom: '5px' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: colors[2] }} /> Mindfulness
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: '#9ca3af', fontWeight: 600, marginBottom: '8px' }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors[1] }} /> Mindfulness
                 </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700 }}>82%</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>82%</div>
               </div>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: '#6b7280', marginBottom: '5px' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: colors[3] }} /> Stress Management
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: '#9ca3af', fontWeight: 600, marginBottom: '8px' }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors[3] }} /> Stress Management
                 </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 700 }}>68%</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>68%</div>
               </div>
             </div>
           </div>
         </div>
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div className="section-panel" style={{ padding: '1.5rem', flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: 36, height: 36, borderRadius: '10px', background: `${colors[1]}22`, color: colors[1], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Scale size={20} /></div>
+          <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', flex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[3]}22`, color: colors[3], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Scale size={20} strokeWidth={2.5} /></div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Body Composition</h3>
               </div>
-              <ArrowRight size={18} color="#9ca3af" />
+              <ArrowRight size={20} color="#9ca3af" />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div style={{ background: '#f9fafb', padding: '1rem', borderRadius: '12px' }}>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '5px' }}>68 <span style={{ fontSize: '0.75rem', fontWeight: 400, opacity: 0.6 }}>Kg</span></div>
-                <div style={{ fontSize: '0.65rem', color: '#6b7280' }}>Your weight is within a healthy range</div>
+              <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>68 <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Kg</span></div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your weight is within a healthy range</div>
               </div>
-              <div style={{ background: '#f9fafb', padding: '1rem', borderRadius: '12px' }}>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '5px' }}>22%</div>
-                <div style={{ fontSize: '0.65rem', color: '#6b7280' }}>Your body fat percentage is at an ideal level</div>
+              <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>22%</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your body fat percentage is at an ideal level</div>
               </div>
             </div>
           </div>
-          <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[4]} 100%)`, padding: '1.5rem', borderRadius: '20px', color: 'white', position: 'relative', overflow: 'hidden' }}>
+
+          <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, padding: '1.8rem', borderRadius: '24px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
             <div style={{ position: 'relative', zIndex: 2 }}>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.5rem' }}>Set and Achieve Your Health Goals!</h4>
-              <p style={{ fontSize: '0.75rem', opacity: 0.9, marginBottom: '1.5rem' }}>Your Goal: Lose 3kg in 1 month</p>
-              <button style={{ background: 'white', color: colors[0], border: 'none', padding: '8px 16px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>Adjust My Goal <ArrowRight size={14} /></button>
+              <h4 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.8rem', lineHeight: '1.3' }}>Set and Achieve Your Health Goals!</h4>
+              <p style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '2rem' }}>Your Goal: Lose 3kg in 1 month</p>
+              <button style={{ background: 'white', color: colors[0], border: 'none', padding: '10px 20px', borderRadius: '14px', fontSize: '0.85rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>Adjust My Goal <ArrowRight size={16} /></button>
             </div>
-            <div style={{ position: 'absolute', right: '-20px', bottom: '-20px', width: '120px', height: '120px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
+            <div style={{ position: 'absolute', right: '-10px', bottom: '-10px', width: '140px', height: '140px', background: 'rgba(255,255,255,0.15)', borderRadius: '50%' }}></div>
           </div>
         </div>
       </div>
@@ -631,8 +635,8 @@ const DashboardOverview = ({ palette }) => {
         ))}
       </div>
 
-      {/* Health Tracker Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
+      {/* Health Tracker Row (REFINED) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: '1.5rem', marginBottom: '2.5rem', minWidth: 0 }}>
         <VitalStatsCard colors={colors} />
         <ActivityCard colors={colors} />
       </div>
