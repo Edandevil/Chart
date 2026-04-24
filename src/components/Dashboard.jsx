@@ -479,13 +479,13 @@ const ActivityCard = ({ colors }) => {
   const cards = [
     { label: "Today's Steps", value: '8,200', unit: 'steps', info: 'Route: Home → Central Park', time: '45 min', icon: <Footprints size={18} />, color: colors[0] },
     { label: "Workout", value: '450', unit: 'Kcal burned', info: 'Workout type: HIIT', time: '30 min', icon: <Flame size={18} />, color: colors[1] },
-    { label: "Sleep & Recovery", value: '85/100', unit: 'sleep score', info: 'Deep Sleep: 2h 10m', time: '7h 45m', icon: <Moon size={18} />, color: colors[2] },
+    { label: "Sleep & Recovery", value: '85/100', unit: 'sleep', info: 'Deep Sleep: 2h 10m', time: '7h 45m', icon: <Moon size={18} />, color: colors[2] },
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', marginBottom: 0 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[4]}22`, color: colors[4], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Activity size={20} strokeWidth={2.5} /></div>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>My Activity</h3>
@@ -504,7 +504,7 @@ const ActivityCard = ({ colors }) => {
                 <span style={{ fontSize: '0.75rem', color: card.color, fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}><Clock size={14} /> {card.time}</span>
               </div>
               <div style={{ fontSize: '0.8rem', color: '#9ca3af', marginBottom: '1.2rem' }}>{card.info}</div>
-              <div style={{ fontSize: '2rem', fontWeight: 800 }}>{card.value} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: '#9ca3af' }}>{card.unit}</span></div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800 }}>{card.value} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: '#9ca3af' }}>{card.unit}</span></div>
             </div>
           ))}
         </div>
