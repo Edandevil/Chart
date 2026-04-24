@@ -308,7 +308,7 @@ const CostAnalysisCard = ({ colors }) => {
   ];
 
   return (
-    <div className="section-panel" style={{ padding: '1.5rem' }}>
+    <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
         <div>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Cost analysis</h3>
@@ -339,7 +339,7 @@ const CostAnalysisCard = ({ colors }) => {
 
 const FinancialHealthCard = ({ colors }) => {
   return (
-    <div className="section-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+    <div className="section-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', marginBottom: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
         <div>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Financial health</h3>
@@ -375,7 +375,7 @@ const GoalTrackerCard = ({ colors }) => {
   ];
 
   return (
-    <div className="section-panel" style={{ padding: '1.5rem' }}>
+    <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Goal tracker</h3>
         <button style={{ background: '#f9fafb', border: '1px solid #e5e7eb', padding: '6px 12px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><Plus size={14} /> Add goals</button>
@@ -617,16 +617,16 @@ const DashboardOverview = ({ palette }) => {
       </div>
 
       {/* Finance Cards Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
         <CostAnalysisCard colors={colors} />
         <FinancialHealthCard colors={colors} />
         <GoalTrackerCard colors={colors} />
       </div>
 
       {/* Opportunities */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
         {['Recoverable wasted spend', 'Unrealized volume', 'Auction competitiveness'].map((t, i) => (
-          <div key={i} className="section-panel" style={{ padding: '1.5rem' }}>
+          <div key={i} className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
             <span style={{ fontSize: '0.6rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: i === 0 ? '#fee2e2' : i === 1 ? '#fef3c7' : `${colors[4]}22`, color: i === 0 ? '#991b1b' : i === 1 ? '#92400e' : colors[4] }}>{['IMMEDIATE', 'NEAR-TERM', 'STRATEGIC'][i]}</span>
             <h3 style={{ fontSize: '0.9rem', margin: '10px 0 5px' }}>{t}</h3>
             <p style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '10px' }}>{['Non-converting terms to negate.', 'Budget-capped campaigns losing 18-27% IS.', '59-73% IS lost to rank.'][i]}</p>
