@@ -93,21 +93,24 @@ const heatmapData = Array.from({ length: 7 }, () => Array.from({ length: 24 }, (
 
 // --- Sub-components ---
 
-const RecommendationCard = ({ severity, category, title, description, action, uplift }) => (
-  <div style={{ marginBottom: '1.5rem', borderLeft: `4px solid ${severity === 'CRITICAL' ? '#ef4444' : severity === 'STRENGTH' ? '#059669' : '#f59e0b'}`, padding: '1.5rem', background: 'white', borderRadius: '0 12px 12px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
-      <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '2px 8px', borderRadius: '4px', background: severity === 'CRITICAL' ? '#fee2e2' : severity === 'STRENGTH' ? '#dcfce7' : '#fef3c7', color: severity === 'CRITICAL' ? '#b91c1c' : severity === 'STRENGTH' ? '#166534' : '#92400e' }}>{severity}</span>
-      <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>{category}</span>
+const RecommendationCard = ({ severity, category, title, description, action, uplift, themeColors }) => {
+  const accentColor = severity === 'CRITICAL' ? '#ef4444' : severity === 'STRENGTH' ? themeColors[2] : '#f59e0b';
+  return (
+    <div style={{ marginBottom: '1.5rem', borderLeft: `4px solid ${accentColor}`, padding: '1.5rem', background: 'white', borderRadius: '0 12px 12px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
+        <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '2px 8px', borderRadius: '4px', background: severity === 'CRITICAL' ? '#fee2e2' : severity === 'STRENGTH' ? `${themeColors[2]}22` : '#fef3c7', color: severity === 'CRITICAL' ? '#b91c1c' : severity === 'STRENGTH' ? themeColors[2] : '#92400e' }}>{severity}</span>
+        <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>{category}</span>
+      </div>
+      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827', marginBottom: '8px' }}>{title}</h4>
+      <p style={{ fontSize: '0.85rem', color: '#4b5563', lineHeight: '1.5', marginBottom: '12px' }}>{description}</p>
+      <div style={{ background: `${themeColors[0]}08`, padding: '12px', borderRadius: '8px', border: `1px solid ${themeColors[0]}22` }}>
+        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: themeColors[0] }}>Action: </span>
+        <span style={{ fontSize: '0.8rem', color: '#1e3a8a' }}>{action}</span>
+      </div>
+      {uplift && <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '10px' }}>{uplift}</div>}
     </div>
-    <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827', marginBottom: '8px' }}>{title}</h4>
-    <p style={{ fontSize: '0.85rem', color: '#4b5563', lineHeight: '1.5', marginBottom: '12px' }}>{description}</p>
-    <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '8px', border: '1px solid #dbeafe' }}>
-      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e40af' }}>Action: </span>
-      <span style={{ fontSize: '0.8rem', color: '#1e3a8a' }}>{action}</span>
-    </div>
-    {uplift && <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '10px' }}>{uplift}</div>}
-  </div>
-);
+  );
+};
 
 const ThemeSwitcher = ({ palettes, setPalettes, activePalette, setActivePalette }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -320,7 +323,7 @@ const DashboardOverview = ({ palette }) => {
             <div style={{ color: '#ef4444' }}>● 3 Critical</div>
             <div style={{ color: '#f59e0b' }}>● 4 High</div>
             <div style={{ color: '#fbbf24' }}>● 3 Medium</div>
-            <div style={{ color: '#10b981' }}>● 2 Strengths</div>
+            <div style={{ color: colors[2] }}>● 2 Strengths</div>
           </div>
         </div>
       </div>
@@ -329,7 +332,7 @@ const DashboardOverview = ({ palette }) => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
         {['Recoverable wasted spend', 'Unrealized volume', 'Auction competitiveness'].map((t, i) => (
           <div key={i} className="section-panel" style={{ padding: '1.5rem' }}>
-            <span style={{ fontSize: '0.6rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: i === 0 ? '#fee2e2' : i === 1 ? '#fef3c7' : '#dbeafe', color: i === 0 ? '#991b1b' : i === 1 ? '#92400e' : '#1e40af' }}>{['IMMEDIATE', 'NEAR-TERM', 'STRATEGIC'][i]}</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: i === 0 ? '#fee2e2' : i === 1 ? '#fef3c7' : `${colors[4]}22`, color: i === 0 ? '#991b1b' : i === 1 ? '#92400e' : colors[4] }}>{['IMMEDIATE', 'NEAR-TERM', 'STRATEGIC'][i]}</span>
             <h3 style={{ fontSize: '0.9rem', margin: '10px 0 5px' }}>{t}</h3>
             <p style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '10px' }}>{['Non-converting terms to negate.', 'Budget-capped campaigns losing 18-27% IS.', '59-73% IS lost to rank.'][i]}</p>
             <div style={{ fontSize: '1.5rem', fontWeight: 800, color: colors[0] }}>{['~$181 / mo', '~$420 / mo', '2x reach'][i]}</div>
@@ -347,7 +350,7 @@ const DashboardOverview = ({ palette }) => {
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>FINDINGS BY SEVERITY</h4>
-            <div style={{ height: 220, marginTop: '20px' }}><Doughnut data={{ labels: ['Critical', 'High', 'Medium', 'Strength'], datasets: [{ data: [3, 4, 3, 2], backgroundColor: ['#991b1b', '#d97706', '#fbbf24', '#059669'], borderWidth: 0, cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 220, marginTop: '20px' }}><Doughnut data={{ labels: ['Critical', 'High', 'Medium', 'Strength'], datasets: [{ data: [3, 4, 3, 2], backgroundColor: ['#991b1b', '#d97706', '#fbbf24', colors[2]], borderWidth: 0, cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CATEGORY SCORE VS TARGET</h4>
@@ -369,7 +372,7 @@ const DashboardOverview = ({ palette }) => {
                   <b style={{ color: '#111827' }}>{c.won}%</b>
                 </div>
                 <div style={{ height: '24px', display: 'flex', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ width: `${c.won}%`, background: '#059669' }} title="Won"></div>
+                  <div style={{ width: `${c.won}%`, background: colors[2] }} title="Won"></div>
                   <div style={{ width: `${c.budget}%`, background: '#f59e0b' }} title="Lost to Budget"></div>
                   <div style={{ width: `${c.rank}%`, background: '#ef4444' }} title="Lost to Rank"></div>
                   <div style={{ flex: 1, background: '#f3f4f6' }}></div>
@@ -379,7 +382,7 @@ const DashboardOverview = ({ palette }) => {
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>IS COMPOSITION RADAR</h4>
-            <div style={{ height: 280 }}><Radar data={{ labels: campaignData.map(c => c.name), datasets: [{ label: 'Won', data: campaignData.map(c => c.won), borderColor: '#059669', backgroundColor: 'transparent' }, { label: 'Lost-Budget', data: campaignData.map(c => c.budget), borderColor: '#f59e0b', backgroundColor: 'transparent' }, { label: 'Lost-Rank', data: campaignData.map(c => c.rank), borderColor: '#ef4444', backgroundColor: 'transparent' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 280 }}><Radar data={{ labels: campaignData.map(c => c.name), datasets: [{ label: 'Won', data: campaignData.map(c => c.won), borderColor: colors[2], backgroundColor: 'transparent' }, { label: 'Lost-Budget', data: campaignData.map(c => c.budget), borderColor: '#f59e0b', backgroundColor: 'transparent' }, { label: 'Lost-Rank', data: campaignData.map(c => c.rank), borderColor: '#ef4444', backgroundColor: 'transparent' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
         </div>
       </div>
@@ -390,7 +393,7 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.2fr', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>QUALITY SCORE DISTRIBUTION</h4>
-            <div style={{ height: 220 }}><Bar data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: '#d97706', borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
+            <div style={{ height: 220 }}><Bar data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
             <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px' }}>Weighted avg: <b style={{ color: '#92400e' }}>5.4</b> • Below target of 7.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
@@ -415,8 +418,8 @@ const DashboardOverview = ({ palette }) => {
           <ScoreCard label="WASTED SPEND" value={71} color="#fbbf24" subtext="17 wasteful terms flagged" />
           <ScoreCard label="DEVICE STRATEGY" value={73} color="#fbbf24" subtext="Desktop undercapitalized" />
           <ScoreCard label="AD SCHEDULE" value={75} color="#fbbf24" subtext="Overnight spend, low conv." />
-          <ScoreCard label="CONVERSION TRACKING" value={85} color="#059669" subtext="Firing, value attached" />
-          <ScoreCard label="OPTIMIZATION SCORE" value={98} color="#059669" subtext="Google-reported: 97.8%" />
+          <ScoreCard label="CONVERSION TRACKING" value={85} color={colors[2]} subtext="Firing, value attached" />
+          <ScoreCard label="OPTIMIZATION SCORE" value={98} color={colors[2]} subtext="Google-reported: 97.8%" />
         </div>
       </div>
 
@@ -467,15 +470,15 @@ const DashboardOverview = ({ palette }) => {
         <p style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>Where the biggest dollars are concentrated — 80/20 view of wasteful terms and high-ROAS opportunities.</p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4 style={{ color: '#991b1b', marginBottom: '15px' }}>WASTE PARETO (ADD AS NEGATIVES)</h4>
+            <h4 style={{ color: colors[0], marginBottom: '15px' }}>WASTE PARETO (ADD AS NEGATIVES)</h4>
             <div style={{ height: 320 }}>
-              <Bar data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Waste ($)', data: wasteParetoData.spend, backgroundColor: '#991b1b', borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Waste ($)', '#991b1b')} />
+              <Bar data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Waste ($)', data: wasteParetoData.spend, backgroundColor: colors[0], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Waste ($)', colors[0])} />
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4 style={{ color: '#059669', marginBottom: '15px' }}>OPPORTUNITY PARETO (ADD AS EXACT-MATCH)</h4>
+            <h4 style={{ color: colors[2], marginBottom: '15px' }}>OPPORTUNITY PARETO (ADD AS EXACT-MATCH)</h4>
             <div style={{ height: 320 }}>
-              <Bar data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Current spend ($)', data: opportunityParetoData.spend, backgroundColor: '#059669', borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Spend ($)', '#059669')} />
+              <Bar data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Current spend ($)', data: opportunityParetoData.spend, backgroundColor: colors[2], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Spend ($)', colors[2])} />
             </div>
           </div>
         </div>
@@ -483,7 +486,7 @@ const DashboardOverview = ({ palette }) => {
 
       {/* Findings & Recommendations */}
       <div className="section-panel">
-        <div className="section-header"><h2>Findings & Recommendations</h2> <div style={{ display: 'flex', gap: '8px' }}><span style={{ background: '#fee2e2', color: '#b91c1c', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Critical</span> <span style={{ background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>4 High</span> <span style={{ background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Medium</span></div></div>
+        <div className="section-header"><h2>Findings & Recommendations</h2> <div style={{ display: 'flex', gap: '8px' }}><span style={{ background: '#fee2e2', color: '#b91c1c', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Critical</span> <span style={{ background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>4 High</span> <span style={{ background: `${colors[2]}22`, color: colors[2], padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Medium</span></div></div>
         <p style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>Ordered by severity and financial impact.</p>
         
         <RecommendationCard 
@@ -493,6 +496,7 @@ const DashboardOverview = ({ palette }) => {
           description="Four of five enabled campaigns are losing the majority of impression share to ad rank (not budget). Bids or QS are insufficient for the auction. Shopping (44%), Core Terms (59%), PMax (73%), Search Local (72%)."
           action="Migrate Search to tROAS (start at 1500%). Rewrite ads in the two lowest-QS ad groups; consolidate near-duplicates."
           uplift="Reach uplift: ~2x eligible search impressions if rank loss halved."
+          themeColors={colors}
         />
 
         <RecommendationCard 
@@ -501,6 +505,7 @@ const DashboardOverview = ({ palette }) => {
           title="Brand queries triggering ads inside competitor ad group"
           description="Search term 'XXXX furniture XXXX' spent $22.36 / 0 conv in ad group 'Competitor A' while identical terms in properly-targeted ad groups return 3 conv at $9.60."
           action="Add brand terms as exact-match negatives in non-brand ad groups; tighten competitor groups from broad to phrase; split brand into dedicated low-CPC campaign."
+          themeColors={colors}
         />
 
         <RecommendationCard 
@@ -509,6 +514,7 @@ const DashboardOverview = ({ palette }) => {
           title="Account ROAS: 30.5x • $93k conversion value on $3k spend"
           description="Top decile of Google-reported account health. Strategic priority is scale, not repair."
           action="Strategic priority is scale, not repair."
+          themeColors={colors}
         />
       </div>
 
@@ -534,7 +540,7 @@ const DashboardOverview = ({ palette }) => {
             {campaignPerformance.map((c, i) => (
               <tr key={i} style={{ borderBottom: i === campaignPerformance.length - 1 ? 'none' : '1px solid #f3f4f6' }}>
                 <td style={{ padding: '12px 1.5rem', fontWeight: 600 }}>{c.name}</td>
-                <td style={{ padding: '12px 1rem' }}><span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: c.type === 'SHOPPING' ? '#dcfce7' : c.type === 'SEARCH' ? '#dbeafe' : c.type === 'PMAX' ? '#fef3c7' : '#f3e8ff', color: c.type === 'SHOPPING' ? '#166534' : c.type === 'SEARCH' ? '#1e40af' : c.type === 'PMAX' ? '#92400e' : '#6b21a8' }}>{c.type}</span></td>
+                <td style={{ padding: '12px 1rem' }}><span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: c.type === 'SHOPPING' ? `${colors[2]}22` : c.type === 'SEARCH' ? `${colors[0]}22` : c.type === 'PMAX' ? `${colors[1]}22` : `${colors[4]}22`, color: c.type === 'SHOPPING' ? colors[2] : c.type === 'SEARCH' ? colors[0] : c.type === 'PMAX' ? colors[1] : colors[4] }}>{c.type}</span></td>
                 <td style={{ padding: '12px 1rem' }}>{c.impr}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.clicks}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.ctr}</td>
@@ -542,7 +548,7 @@ const DashboardOverview = ({ palette }) => {
                 <td style={{ padding: '12px 1rem' }}>{c.spend}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.conv}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.cpa}</td>
-                <td style={{ padding: '12px 1.5rem', fontWeight: 700, color: c.status === 'CRITICAL' ? '#ef4444' : c.status === 'STRENGTH' ? '#059669' : '#111827' }}>{c.roas}</td>
+                <td style={{ padding: '12px 1.5rem', fontWeight: 700, color: c.status === 'CRITICAL' ? '#ef4444' : c.status === 'STRENGTH' ? colors[2] : '#111827' }}>{c.roas}</td>
               </tr>
             ))}
           </tbody>
@@ -575,7 +581,7 @@ const DashboardOverview = ({ palette }) => {
                 <td style={{ padding: '12px 1rem' }}>{m.conv}</td>
                 <td style={{ padding: '12px 1rem', fontWeight: 700 }}>{m.roas}</td>
                 <td style={{ padding: '12px 1.5rem' }}>
-                  <span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: m.flag === 'OK' ? '#dcfce7' : m.flag === 'LOW VALUE' ? '#fef3c7' : '#fee2e2', color: m.flag === 'OK' ? '#166534' : m.flag === 'LOW VALUE' ? '#92400e' : '#b91c1c' }}>{m.flag}</span>
+                  <span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: m.flag === 'OK' ? `${colors[2]}22` : m.flag === 'LOW VALUE' ? '#fef3c7' : '#fee2e2', color: m.flag === 'OK' ? colors[2] : m.flag === 'LOW VALUE' ? '#92400e' : '#b91c1c' }}>{m.flag}</span>
                 </td>
               </tr>
             ))}
