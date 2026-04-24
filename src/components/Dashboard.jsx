@@ -583,63 +583,6 @@ const ActivityCard = ({ colors }) => {
 const BarChartsPage = ({ palette }) => {
   const colors = palette.colors;
 
-  const paretoOptions = (yTitle, color) => ({
-    maintainAspectRatio: false,
-    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
-    scales: {
-      y: { type: 'linear', position: 'left', title: { display: true, text: yTitle, font: { size: 9 } } },
-      y1: { type: 'linear', position: 'right', min: 0, max: 100, title: { display: true, text: 'Cumulative %', font: { size: 9 } }, grid: { display: false }, ticks: { callback: v => v + '%' } },
-      x: { ticks: { font: { size: 8 }, maxRotation: 45, minRotation: 45 } }
-    }
-  });
-
-  return (
-    <div className="container" style={{ minWidth: 0 }}>
-      <div className="section-panel" style={{ padding: '2rem' }}>
-        <div className="section-header"><h2>All Bar Charts</h2></div>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
-          <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CATEGORY SCORE VS TARGET</h4>
-            <div style={{ height: 260 }}><Bar data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100 } } }} /></div>
-          </div>
-          
-          <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>QUALITY SCORE DISTRIBUTION</h4>
-            <div style={{ height: 260 }}><Bar data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
-          <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>ROAS BY DEVICE</h4>
-            <div style={{ height: 200 }}><Bar data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
-          </div>
-          <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CONVERSIONS BY HOUR</h4>
-            <div style={{ height: 200 }}><Bar data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
-          </div>
-          <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CONVERSIONS BY DAY</h4>
-            <div style={{ height: 200 }}><Bar data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', minWidth: 0 }}>
-          <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4 style={{ color: colors[0], marginBottom: '15px' }}>WASTE PARETO</h4>
-            <div style={{ height: 320 }}>
-              <Bar data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Waste ($)', data: wasteParetoData.spend, backgroundColor: colors[0], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Waste ($)', colors[0])} />
-            </div>
-          </div>
-          <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4 style={{ color: colors[2], marginBottom: '15px' }}>OPPORTUNITY PARETO</h4>
-            <div style={{ height: 320 }}>
-              <Bar data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Current spend ($)', data: opportunityParetoData.spend, backgroundColor: colors[2], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Spend ($)', colors[2])} />
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   );
