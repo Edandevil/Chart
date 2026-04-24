@@ -900,6 +900,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => (
       <div className="menu-label">Navigation</div>
       <div className={`menu-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}><LayoutDashboard size={20} /> Dashboard</div>
       <div className={`menu-item ${activeTab === 'table' ? 'active' : ''}`} onClick={() => setActiveTab('table')}><TableIcon size={20} /> Data View</div>
+      <div className={`menu-item ${activeTab === 'barchart' ? 'active' : ''}`} onClick={() => setActiveTab('barchart')}><BarChart2 size={20} /> Bar Chart</div>
     </div>
     <div style={{ marginTop: 'auto' }}><div className="menu-item"><Settings size={20} /> Settings</div></div>
   </div>
@@ -931,7 +932,9 @@ const Dashboard = () => {
             </div>
           </div>
         </header>
-        {activeTab === 'overview' ? <DashboardOverview palette={activePalette} /> : <div className="section-panel"><h2>Data Table Content</h2></div>}
+        {activeTab === 'overview' && <DashboardOverview palette={activePalette} />}
+        {activeTab === 'table' && <div className="section-panel"><h2>Data Table Content</h2></div>}
+        {activeTab === 'barchart' && <div className="section-panel"><h2>Bar Chart Content</h2></div>}
       </div>
     </div>
   );
