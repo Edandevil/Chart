@@ -18,7 +18,7 @@ import {
   LayoutDashboard, Table as TableIcon, PieChart as PieIcon, TrendingUp, 
   Settings, Download, RefreshCw, Pin, X, ChevronDown, 
   Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight,
-  Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2
+  Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink
 } from 'lucide-react';
 
 // Register ChartJS components
@@ -53,6 +53,35 @@ const campaignData = [
   { name: 'PMax', spend: 301.07, conv: 117.0, roas: 0.4, cpa: 2.57, type: 'PMAX', impr: '40,100', clicks: '339', won: 23, budget: 4, rank: 73 },
 ];
 
+const campaignPerformance = [
+  { name: 'XXXX · Shopping Local Inventory', type: 'SHOPPING', impr: '181,520', clicks: '3,362', ctr: '1.85%', cpc: '$0.26', spend: '$888.93', conv: '42.9', cpa: '$20.71', roas: '45.0x', status: 'GOOD' },
+  { name: 'XXXX · Search Local Keywords', type: 'SEARCH', impr: '4,186', clicks: '493', ctr: '11.78%', cpc: '$1.77', spend: '$874.22', conv: '39.4', cpa: '$22.21', roas: '37.8x', status: 'GOOD' },
+  { name: 'XXXX · Search Core Terms', type: 'SEARCH', impr: '5,019', clicks: '496', ctr: '9.88%', cpc: '$1.68', spend: '$835.27', conv: '98.0', cpa: '$8.52', roas: '18.3x', status: 'GOOD' },
+  { name: 'XXXX · Performance Max', type: 'PMAX', impr: '40,100', clicks: '339', ctr: '0.85%', cpc: '$0.89', spend: '$301.07', conv: '117.0', cpa: '$2.57', roas: '0.4x', status: 'CRITICAL' },
+  { name: 'XXXX · Display Remarketing', type: 'DISPLAY', impr: '9,550', clicks: '162', ctr: '1.70%', cpc: '$0.94', spend: '$152.83', conv: '2.0', cpa: '$76.42', roas: '30.8x', status: 'STRENGTH' },
+];
+
+const problemMatrix = [
+  { adgroup: 'Shopping Ad Group', campaign: 'XXXX · Shopping', clicks: '3,362', spend: '$888.93', conv: '42.9', roas: '45.0x', flag: 'OK' },
+  { adgroup: 'In-Stock Furniture', campaign: 'XXXX · Search Local', clicks: '263', spend: '$498.61', conv: '24.5', roas: '35.0x', flag: 'OK' },
+  { adgroup: 'Location Terms XXXX', campaign: 'XXXX · Core Terms', clicks: '306', spend: '$383.42', conv: '36.0', roas: '32.0x', flag: 'OK' },
+  { adgroup: 'American-Made / Quality', campaign: 'XXXX · Core Terms', clicks: '105', spend: '$258.48', conv: '41.0', roas: '2.7x', flag: 'LOW VALUE' },
+  { adgroup: 'Best Keywords', campaign: 'XXXX · Core Terms', clicks: '74', spend: '$164.21', conv: '19.0', roas: '14.0x', flag: 'OK' },
+  { adgroup: 'Competitor A', campaign: 'XXXX · Search Local', clicks: '93', spend: '$129.78', conv: '8.9', roas: '99.3x', flag: 'BRAND LEAK' },
+];
+
+const wasteParetoData = {
+  labels: ['XXXX furniture', 'XXXX XXXX furn.', 'furniture stores', 'XXXX furniture', 'furniture store near me', 'XXXX furniture', 'XXXX furn. XXXX', 'XXXX furn.', 'XXXX XXXX XXXX'],
+  spend: [25.0, 22.1, 14.5, 12.0, 11.2, 11.0, 9.1, 8.5, 8.2],
+  cumulative: [18, 35, 48, 58, 68, 76, 84, 91, 100]
+};
+
+const opportunityParetoData = {
+  labels: ['XXXX XXXX XXXX', 'XXXX XXXX', 'wayfair near me', 'XXXX furniture', 'furniture store XXXX', 'furniture store XXXX', 'queen bed frame', 'furniture gallery XXXX', 'day bed', 'sofa set'],
+  spend: [78, 22, 21, 9, 18, 11, 2, 2, 1, 1],
+  cumulative: [38, 48, 58, 62, 71, 76, 88, 93, 98, 100]
+};
+
 const trendData = Array.from({ length: 30 }, (_, i) => ({
   date: `3/${i + 22}`,
   spend: Math.floor(Math.random() * 80) + 60,
@@ -63,6 +92,22 @@ const trendData = Array.from({ length: 30 }, (_, i) => ({
 const heatmapData = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => Math.floor(Math.random() * 15)));
 
 // --- Sub-components ---
+
+const RecommendationCard = ({ severity, category, title, description, action, uplift }) => (
+  <div style={{ marginBottom: '1.5rem', borderLeft: `4px solid ${severity === 'CRITICAL' ? '#ef4444' : severity === 'STRENGTH' ? '#059669' : '#f59e0b'}`, padding: '1.5rem', background: 'white', borderRadius: '0 12px 12px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
+      <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '2px 8px', borderRadius: '4px', background: severity === 'CRITICAL' ? '#fee2e2' : severity === 'STRENGTH' ? '#dcfce7' : '#fef3c7', color: severity === 'CRITICAL' ? '#b91c1c' : severity === 'STRENGTH' ? '#166534' : '#92400e' }}>{severity}</span>
+      <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>{category}</span>
+    </div>
+    <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827', marginBottom: '8px' }}>{title}</h4>
+    <p style={{ fontSize: '0.85rem', color: '#4b5563', lineHeight: '1.5', marginBottom: '12px' }}>{description}</p>
+    <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '8px', border: '1px solid #dbeafe' }}>
+      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e40af' }}>Action: </span>
+      <span style={{ fontSize: '0.8rem', color: '#1e3a8a' }}>{action}</span>
+    </div>
+    {uplift && <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '10px' }}>{uplift}</div>}
+  </div>
+);
 
 const ThemeSwitcher = ({ palettes, setPalettes, activePalette, setActivePalette }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -247,6 +292,16 @@ const Heatmap = ({ data, palette }) => {
 const DashboardOverview = ({ palette }) => {
   const colors = palette.colors;
 
+  const paretoOptions = (yTitle, color) => ({
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
+    scales: {
+      y: { type: 'linear', position: 'left', title: { display: true, text: yTitle, font: { size: 9 } } },
+      y1: { type: 'linear', position: 'right', min: 0, max: 100, title: { display: true, text: 'Cumulative %', font: { size: 9 } }, grid: { display: false }, ticks: { callback: v => v + '%' } },
+      x: { ticks: { font: { size: 8 }, maxRotation: 45, minRotation: 45 } }
+    }
+  });
+
   return (
     <div className="container" style={{ minWidth: 0 }}>
       {/* Banner */}
@@ -404,6 +459,128 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ marginTop: '20px' }}>
           <Heatmap data={heatmapData} palette={palette} />
         </div>
+      </div>
+
+      {/* Waste vs Opportunity Pareto */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Waste vs Opportunity Pareto</h2></div>
+        <p style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>Where the biggest dollars are concentrated — 80/20 view of wasteful terms and high-ROAS opportunities.</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4 style={{ color: '#991b1b', marginBottom: '15px' }}>WASTE PARETO (ADD AS NEGATIVES)</h4>
+            <div style={{ height: 320 }}>
+              <Bar data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Waste ($)', data: wasteParetoData.spend, backgroundColor: '#991b1b', borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Waste ($)', '#991b1b')} />
+            </div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4 style={{ color: '#059669', marginBottom: '15px' }}>OPPORTUNITY PARETO (ADD AS EXACT-MATCH)</h4>
+            <div style={{ height: 320 }}>
+              <Bar data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Current spend ($)', data: opportunityParetoData.spend, backgroundColor: '#059669', borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Spend ($)', '#059669')} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Findings & Recommendations */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Findings & Recommendations</h2> <div style={{ display: 'flex', gap: '8px' }}><span style={{ background: '#fee2e2', color: '#b91c1c', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Critical</span> <span style={{ background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>4 High</span> <span style={{ background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Medium</span></div></div>
+        <p style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>Ordered by severity and financial impact.</p>
+        
+        <RecommendationCard 
+          severity="CRITICAL" 
+          category="Impression Share · Auction" 
+          title="Search Impression Share lost to rank across 4 campaigns"
+          description="Four of five enabled campaigns are losing the majority of impression share to ad rank (not budget). Bids or QS are insufficient for the auction. Shopping (44%), Core Terms (59%), PMax (73%), Search Local (72%)."
+          action="Migrate Search to tROAS (start at 1500%). Rewrite ads in the two lowest-QS ad groups; consolidate near-duplicates."
+          uplift="Reach uplift: ~2x eligible search impressions if rank loss halved."
+        />
+
+        <RecommendationCard 
+          severity="CRITICAL" 
+          category="Structure · Brand Leak" 
+          title="Brand queries triggering ads inside competitor ad group"
+          description="Search term 'XXXX furniture XXXX' spent $22.36 / 0 conv in ad group 'Competitor A' while identical terms in properly-targeted ad groups return 3 conv at $9.60."
+          action="Add brand terms as exact-match negatives in non-brand ad groups; tighten competitor groups from broad to phrase; split brand into dedicated low-CPC campaign."
+        />
+
+        <RecommendationCard 
+          severity="STRENGTH" 
+          category="Performance" 
+          title="Account ROAS: 30.5x • $93k conversion value on $3k spend"
+          description="Top decile of Google-reported account health. Strategic priority is scale, not repair."
+          action="Strategic priority is scale, not repair."
+        />
+      </div>
+
+      {/* Campaign Performance Summary */}
+      <div className="section-panel" style={{ padding: 0, overflow: 'hidden' }}>
+        <div style={{ padding: '1.5rem' }}><h2>Campaign Performance Summary</h2></div>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+          <thead style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb', color: '#6b7280', textAlign: 'left' }}>
+            <tr>
+              <th style={{ padding: '12px 1.5rem' }}>CAMPAIGN</th>
+              <th style={{ padding: '12px 1rem' }}>TYPE</th>
+              <th style={{ padding: '12px 1rem' }}>IMPR.</th>
+              <th style={{ padding: '12px 1rem' }}>CLICKS</th>
+              <th style={{ padding: '12px 1rem' }}>CTR</th>
+              <th style={{ padding: '12px 1rem' }}>AVG. CPC</th>
+              <th style={{ padding: '12px 1rem' }}>SPEND</th>
+              <th style={{ padding: '12px 1rem' }}>CONV.</th>
+              <th style={{ padding: '12px 1rem' }}>CPA</th>
+              <th style={{ padding: '12px 1.5rem' }}>ROAS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {campaignPerformance.map((c, i) => (
+              <tr key={i} style={{ borderBottom: i === campaignPerformance.length - 1 ? 'none' : '1px solid #f3f4f6' }}>
+                <td style={{ padding: '12px 1.5rem', fontWeight: 600 }}>{c.name}</td>
+                <td style={{ padding: '12px 1rem' }}><span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: c.type === 'SHOPPING' ? '#dcfce7' : c.type === 'SEARCH' ? '#dbeafe' : c.type === 'PMAX' ? '#fef3c7' : '#f3e8ff', color: c.type === 'SHOPPING' ? '#166534' : c.type === 'SEARCH' ? '#1e40af' : c.type === 'PMAX' ? '#92400e' : '#6b21a8' }}>{c.type}</span></td>
+                <td style={{ padding: '12px 1rem' }}>{c.impr}</td>
+                <td style={{ padding: '12px 1rem' }}>{c.clicks}</td>
+                <td style={{ padding: '12px 1rem' }}>{c.ctr}</td>
+                <td style={{ padding: '12px 1rem' }}>{c.cpc}</td>
+                <td style={{ padding: '12px 1rem' }}>{c.spend}</td>
+                <td style={{ padding: '12px 1rem' }}>{c.conv}</td>
+                <td style={{ padding: '12px 1rem' }}>{c.cpa}</td>
+                <td style={{ padding: '12px 1.5rem', fontWeight: 700, color: c.status === 'CRITICAL' ? '#ef4444' : c.status === 'STRENGTH' ? '#059669' : '#111827' }}>{c.roas}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div style={{ padding: '12px 1.5rem', fontSize: '0.75rem', color: '#6b7280', background: '#f9fafb' }}>* PMax conversion value likely miscounted — see conversion-tracking finding.</div>
+      </div>
+
+      {/* Ad Group Problem Matrix */}
+      <div className="section-panel" style={{ padding: 0, overflow: 'hidden' }}>
+        <div style={{ padding: '1.5rem' }}><h2>Ad Group Problem Matrix</h2></div>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+          <thead style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb', color: '#6b7280', textAlign: 'left' }}>
+            <tr>
+              <th style={{ padding: '12px 1.5rem' }}>AD GROUP</th>
+              <th style={{ padding: '12px 1rem' }}>CAMPAIGN</th>
+              <th style={{ padding: '12px 1rem' }}>CLICKS</th>
+              <th style={{ padding: '12px 1rem' }}>SPEND</th>
+              <th style={{ padding: '12px 1rem' }}>CONV.</th>
+              <th style={{ padding: '12px 1rem' }}>ROAS</th>
+              <th style={{ padding: '12px 1.5rem' }}>FLAG</th>
+            </tr>
+          </thead>
+          <tbody>
+            {problemMatrix.map((m, i) => (
+              <tr key={i} style={{ borderBottom: i === problemMatrix.length - 1 ? 'none' : '1px solid #f3f4f6' }}>
+                <td style={{ padding: '12px 1.5rem', fontWeight: 600 }}>{m.adgroup}</td>
+                <td style={{ padding: '12px 1rem', color: '#6b7280' }}>{m.campaign}</td>
+                <td style={{ padding: '12px 1rem' }}>{m.clicks}</td>
+                <td style={{ padding: '12px 1rem' }}>{m.spend}</td>
+                <td style={{ padding: '12px 1rem' }}>{m.conv}</td>
+                <td style={{ padding: '12px 1rem', fontWeight: 700 }}>{m.roas}</td>
+                <td style={{ padding: '12px 1.5rem' }}>
+                  <span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: m.flag === 'OK' ? '#dcfce7' : m.flag === 'LOW VALUE' ? '#fef3c7' : '#fee2e2', color: m.flag === 'OK' ? '#166534' : m.flag === 'LOW VALUE' ? '#92400e' : '#b91c1c' }}>{m.flag}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
