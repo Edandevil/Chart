@@ -366,6 +366,7 @@ const CostAnalysisCard = ({ colors }) => {
         {items.map((item, i) => (
           <div key={i} style={{ width: `${item.pct}%`, background: item.color }} />
         ))}
+        <div style={{ flex: 1, background: '#e5e7eb' }} title="Other Categories" />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {items.map((item, i) => (
