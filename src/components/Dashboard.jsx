@@ -591,27 +591,27 @@ const BarChartsPage = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CATEGORY SCORE VS TARGET</h4>
-            <div style={{ height: 260 }}><Bar data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100 } } }} /></div>
+            <div style={{ height: 260 }}><Bar key={palette.id} data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100, grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
           </div>
           
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>QUALITY SCORE DISTRIBUTION</h4>
-            <div style={{ height: 260 }}><Bar data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
+            <div style={{ height: 260 }}><Bar key={palette.id} data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
           </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>ROAS BY DEVICE</h4>
-            <div style={{ height: 200 }}><Bar data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
+            <div style={{ height: 200 }}><Bar key={palette.id} data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CONVERSIONS BY HOUR</h4>
-            <div style={{ height: 200 }}><Bar data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
+            <div style={{ height: 200 }}><Bar key={palette.id} data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ label: 'Conversions', data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CONVERSIONS BY DAY</h4>
-            <div style={{ height: 200 }}><Bar data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
+            <div style={{ height: 200 }}><Bar key={palette.id} data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Conversions', data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
           </div>
         </div>
       </div>
@@ -632,11 +632,12 @@ const DonutChartsPage = ({ palette }) => {
             <h4>FINDINGS BY SEVERITY (DONUT)</h4>
             <div style={{ height: 280 }}>
               <Doughnut 
+                key={palette.id}
                 data={{ 
                   labels: ['Critical', 'High', 'Medium', 'Strength'], 
                   datasets: [{ 
                     data: [3, 4, 3, 2], 
-                    backgroundColor: ['#991b1b', '#d97706', '#fbbf24', colors[2]], 
+                    backgroundColor: [colors[0], colors[1], colors[2], colors[3]], 
                     borderWidth: 3, 
                     borderColor: '#ffffff', 
                     cutout: '70%' 
@@ -651,6 +652,7 @@ const DonutChartsPage = ({ palette }) => {
             <h4>MATCH TYPE MIX (PIE)</h4>
             <div style={{ height: 280 }}>
               <Pie 
+                key={palette.id}
                 data={{ 
                   labels: ['Phrase', 'Broad', 'Exact'], 
                   datasets: [{ 
@@ -669,6 +671,7 @@ const DonutChartsPage = ({ palette }) => {
             <h4>DEVICE MIX (POLAR)</h4>
             <div style={{ height: 280 }}>
               <PolarArea 
+                key={palette.id}
                 data={{ 
                   labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], 
                   datasets: [{ 
@@ -709,9 +712,9 @@ const DashboardOverview = ({ palette }) => {
     maintainAspectRatio: false,
     plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
     scales: {
-      y: { type: 'linear', position: 'left', title: { display: true, text: yTitle, font: { size: 9 } } },
+      y: { type: 'linear', position: 'left', title: { display: true, text: yTitle, font: { size: 9 } }, grid: { display: false } },
       y1: { type: 'linear', position: 'right', min: 0, max: 100, title: { display: true, text: 'Cumulative %', font: { size: 9 } }, grid: { display: false }, ticks: { callback: v => v + '%' } },
-      x: { ticks: { font: { size: 8 }, maxRotation: 45, minRotation: 45 } }
+      x: { ticks: { font: { size: 8 }, maxRotation: 45, minRotation: 45 }, grid: { display: false } }
     }
   });
 
@@ -769,15 +772,15 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.5fr', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>HEALTH RADAR — 8 DIMENSIONS</h4>
-            <div style={{ height: 260 }}><Radar data={{ labels: ['Impr. Share', 'Keyword', 'QS', 'Waste', 'Device', 'Schedule', 'Tracking', 'Opt.'], datasets: [{ label: 'Current', data: [60, 55, 50, 40, 70, 65, 75, 45], backgroundColor: `${colors[0]}33`, borderColor: colors[0], borderWidth: 2 }, { label: 'Target', data: [80, 70, 65, 60, 85, 75, 90, 55], backgroundColor: `${colors[1]}11`, borderColor: colors[1], borderWidth: 2, borderDash: [5, 5] }] }} options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 260 }}><Radar key={palette.id} data={{ labels: ['Impr. Share', 'Keyword', 'QS', 'Waste', 'Device', 'Schedule', 'Tracking', 'Opt.'], datasets: [{ label: 'Current', data: [60, 55, 50, 40, 70, 65, 75, 45], backgroundColor: `${colors[0]}33`, borderColor: colors[0], borderWidth: 2 }, { label: 'Target', data: [80, 70, 65, 60, 85, 75, 90, 55], backgroundColor: `${colors[1]}11`, borderColor: colors[1], borderWidth: 2, borderDash: [5, 5] }] }} options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>FINDINGS BY SEVERITY</h4>
-            <div style={{ height: 220, marginTop: '20px' }}><Doughnut data={{ labels: ['Critical', 'High', 'Medium', 'Strength'], datasets: [{ data: [3, 4, 3, 2], backgroundColor: ['#991b1b', '#d97706', '#fbbf24', colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 220, marginTop: '20px' }}><Doughnut key={palette.id} data={{ labels: ['Critical', 'High', 'Medium', 'Strength'], datasets: [{ data: [3, 4, 3, 2], backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CATEGORY SCORE VS TARGET</h4>
-            <div style={{ height: 260 }}><Bar data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100 } } }} /></div>
+            <div style={{ height: 260 }}><Bar key={palette.id} data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100, grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
           </div>
         </div>
       </div>
@@ -805,7 +808,7 @@ const DashboardOverview = ({ palette }) => {
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>IS COMPOSITION RADAR</h4>
-            <div style={{ height: 280 }}><Radar data={{ labels: campaignData.map(c => c.name), datasets: [{ label: 'Won', data: campaignData.map(c => c.won), borderColor: colors[2], backgroundColor: 'transparent' }, { label: 'Lost-Budget', data: campaignData.map(c => c.budget), borderColor: '#f59e0b', backgroundColor: 'transparent' }, { label: 'Lost-Rank', data: campaignData.map(c => c.rank), borderColor: '#ef4444', backgroundColor: 'transparent' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 280 }}><Radar key={palette.id} data={{ labels: campaignData.map(c => c.name), datasets: [{ label: 'Won', data: campaignData.map(c => c.won), borderColor: colors[2], backgroundColor: 'transparent' }, { label: 'Lost-Budget', data: campaignData.map(c => c.budget), borderColor: '#f59e0b', backgroundColor: 'transparent' }, { label: 'Lost-Rank', data: campaignData.map(c => c.rank), borderColor: '#ef4444', backgroundColor: 'transparent' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
         </div>
       </div>
@@ -816,17 +819,17 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.2fr', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>QUALITY SCORE DISTRIBUTION</h4>
-            <div style={{ height: 220 }}><Bar data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
+            <div style={{ height: 220 }}><Bar key={palette.id} data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
             <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px' }}>Weighted avg: <b style={{ color: '#92400e' }}>5.4</b> • Below target of 7.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>MATCH TYPE MIX (SPEND-WEIGHTED)</h4>
-            <div style={{ height: 220 }}><Doughnut data={{ labels: ['Phrase', 'Broad', 'Exact'], datasets: [{ data: [45, 50, 5], backgroundColor: [colors[0], colors[1], colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 220 }}><Doughnut key={palette.id} data={{ labels: ['Phrase', 'Broad', 'Exact'], datasets: [{ data: [45, 50, 5], backgroundColor: [colors[0], colors[1], colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
             <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px', textAlign: 'center' }}>Broad dominates — shift converting terms to exact.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>QS VS COST (SIZE = CONVERSIONS)</h4>
-            <div style={{ height: 220 }}><Bubble data={{ datasets: [{ label: 'Ad Groups', data: [{ x: 3, y: 40, r: 8 }, { x: 5, y: 120, r: 25 }, { x: 6, y: 20, r: 12 }, { x: 8, y: 30, r: 15 }, { x: 10, y: 280, r: 35 }], backgroundColor: colors[1] + '80', borderColor: colors[1] }] }} options={{ maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Quality Score', font: { size: 9 } } }, y: { title: { display: true, text: 'Spend ($)', font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 220 }}><Bubble key={palette.id} data={{ datasets: [{ label: 'Ad Groups', data: [{ x: 3, y: 40, r: 8 }, { x: 5, y: 120, r: 25 }, { x: 6, y: 20, r: 12 }, { x: 8, y: 30, r: 15 }, { x: 10, y: 280, r: 35 }], backgroundColor: colors[1] + '80', borderColor: colors[1] }] }} options={{ maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Quality Score', font: { size: 9 } }, grid: { display: false } }, y: { title: { display: true, text: 'Spend ($)', font: { size: 9 } }, grid: { display: false } } } }} /></div>
           </div>
         </div>
       </div>
@@ -839,6 +842,7 @@ const DashboardOverview = ({ palette }) => {
             <h4>CONVERSION VALUE TREND</h4>
             <div style={{ height: 260 }}>
               <Line 
+                key={palette.id}
                 data={{ 
                   labels: trendData.map(d => d.date), 
                   datasets: [{ 
@@ -858,7 +862,7 @@ const DashboardOverview = ({ palette }) => {
                   scales: { 
                     y: { 
                       beginAtZero: true,
-                      grid: { color: '#f3f4f6' },
+                      grid: { display: false },
                       ticks: { font: { size: 10 } }
                     },
                     x: {
@@ -874,6 +878,7 @@ const DashboardOverview = ({ palette }) => {
             <h4>QS VS COST (SIZE = CONVERSIONS)</h4>
             <div style={{ height: 260 }}>
               <Bubble 
+                key={palette.id}
                 data={{ 
                   datasets: [{ 
                     label: 'Ad Groups', 
@@ -910,14 +915,14 @@ const DashboardOverview = ({ palette }) => {
                       title: { display: true, text: 'Quality Score', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { top: 10 } },
                       min: 2,
                       max: 11,
-                      grid: { color: '#f3f4f6' },
+                      grid: { display: false },
                       ticks: { font: { size: 11 } }
                     }, 
                     y: { 
                       title: { display: true, text: 'Spend ($)', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { bottom: 10 } },
                       min: 0,
                       max: 350,
-                      grid: { color: '#f3f4f6' },
+                      grid: { display: false },
                       ticks: { font: { size: 11 } }
                     } 
                   } 
@@ -951,7 +956,7 @@ const DashboardOverview = ({ palette }) => {
             <div key={i} className="chart-item" style={{ padding: '1rem', border: '1px solid #f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6b7280', marginBottom: '5px' }}>{t}</div>
               <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827' }}>{['$102 / day', '9.98 / day', '$10.20', '30.5x'][i]}</div>
-              <div style={{ height: 60 }}><Line data={{ labels: trendData.map((_, j) => j), datasets: [{ data: trendData.map(d => i === 0 ? d.spend : i === 1 ? d.conv : i === 2 ? Math.random()*20 : d.roas), borderColor: colors[i], backgroundColor: `${colors[i]}11`, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }} /></div>
+              <div style={{ height: 60 }}><Line key={palette.id} data={{ labels: trendData.map((_, j) => j), datasets: [{ data: trendData.map(d => i === 0 ? d.spend : i === 1 ? d.conv : i === 2 ? Math.random()*20 : d.roas), borderColor: colors[i], backgroundColor: `${colors[i]}11`, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false, grid: { display: false } }, y: { display: false, grid: { display: false } } } }} /></div>
             </div>
           ))}
         </div>
@@ -963,19 +968,19 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>DEVICE MIX (SPEND)</h4>
-            <div style={{ height: 180 }}><Doughnut data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [70, 15, 10, 5], backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 180 }}><Doughnut key={palette.id} data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [70, 15, 10, 5], backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>ROAS BY DEVICE</h4>
-            <div style={{ height: 180 }}><Bar data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} /></div>
+            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CONVERSIONS BY HOUR</h4>
-            <div style={{ height: 180 }}><Bar data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
+            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ label: 'Conversions', data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CONVERSIONS BY DAY</h4>
-            <div style={{ height: 180 }}><Bar data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }} /></div>
+            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Conversions', data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
           </div>
         </div>
         <h4>CONVERSION HEATMAP — DAY × HOUR</h4>
@@ -992,13 +997,13 @@ const DashboardOverview = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4 style={{ color: colors[0], marginBottom: '15px' }}>WASTE PARETO (ADD AS NEGATIVES)</h4>
             <div style={{ height: 320 }}>
-              <Bar data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Waste ($)', data: wasteParetoData.spend, backgroundColor: colors[0], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Waste ($)', colors[0])} />
+              <Bar key={palette.id} data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Waste ($)', data: wasteParetoData.spend, backgroundColor: colors[0], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Waste ($)', colors[0])} />
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4 style={{ color: colors[2], marginBottom: '15px' }}>OPPORTUNITY PARETO (ADD AS EXACT-MATCH)</h4>
             <div style={{ height: 320 }}>
-              <Bar data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Current spend ($)', data: opportunityParetoData.spend, backgroundColor: colors[2], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Spend ($)', colors[2])} />
+              <Bar key={palette.id} data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Current spend ($)', data: opportunityParetoData.spend, backgroundColor: colors[2], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Spend ($)', colors[2])} />
             </div>
           </div>
         </div>
