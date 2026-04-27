@@ -132,7 +132,11 @@ const trendData = orderTrends.slice(0, 30).map(t => ({
   roas: t.avg_order_value
 }));
 
-const heatmapData = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => Math.floor(Math.random() * 15)));
+const heatmapData = Array.from({ length: 7 }, () => Array.from({ length: 24 }, (_, hour) => {
+  const isPeak = (hour >= 11 && hour <= 14) || (hour >= 17 && hour <= 20);
+  const baseTraffic = isPeak ? 15 : 5;
+  return Math.floor(baseTraffic + Math.random() * 10);
+}));
 
 // --- Sub-components ---
 
@@ -338,26 +342,23 @@ const Heatmap = ({ data, palette }) => {
 // --- Finance Cards ---
 
 const CostAnalysisCard = ({ colors }) => {
-  const items = [
-    { name: 'Housing', pct: 18, color: colors[1] },
-    { name: 'Debt payments', pct: 7, color: colors[2] },
-    { name: 'Food', pct: 6, color: colors[3] },
-    { name: 'Transportation', pct: 9, color: colors[4] },
-    { name: 'Healthcare', pct: 10, color: colors[5] },
-    { name: 'Investments', pct: 17, color: colors[6] },
-    { name: 'Other', pct: 33, color: '#f3f4f6' },
-  ];
+  const totalProdRev = topProducts.reduce((sum, p) => sum + Number(p.total_revenue || 0), 0) || 1;
+  const items = topProducts.slice(0, 4).map((p, i) => ({
+    name: p.product_name.substring(0, 15),
+    pct: Math.round((Number(p.total_revenue) / totalProdRev) * 100),
+    color: colors[i]
+  }));
 
   return (
     <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
         <div>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Cost analysis</h3>
-          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Spending overview</div>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Revenue Analysis</h3>
+          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Category distribution</div>
         </div>
-        <div style={{ background: '#f9fafb', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '5px' }}>January <ChevronDown size={14} /></div>
+        <div style={{ background: '#f9fafb', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '5px' }}>Last 30d <ChevronDown size={14} /></div>
       </div>
-      <div style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1.5rem' }}>$8,450</div>
+      <div style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1.5rem' }}>Rs. {kpis.total_revenue?.toLocaleString() || 0}</div>
       <div style={{ height: '30px', display: 'flex', gap: '4px', borderRadius: '8px', overflow: 'hidden', marginBottom: '1.5rem' }}>
         {items.map((item, i) => (
           <div key={i} style={{ width: `${item.pct}%`, background: item.color }} />
@@ -383,22 +384,22 @@ const FinancialHealthCard = ({ colors }) => {
     <div className="section-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', marginBottom: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
         <div>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Financial health</h3>
-          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Current status</div>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Order Performance</h3>
+          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Average Order Value</div>
         </div>
         <div style={{ background: '#f9fafb', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '5px' }}>30d <ChevronDown size={14} /></div>
       </div>
-      <div style={{ fontSize: '2rem', fontWeight: 800 }}>$15,780</div>
+      <div style={{ fontSize: '2rem', fontWeight: 800 }}>Rs. {Math.round(kpis.average_order_value || 0).toLocaleString()}</div>
       <div style={{ fontSize: '0.85rem', color: colors[2], display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '1.5rem' }}>
-        <TrendingUp size={16} /> 17.5% <span style={{ color: '#6b7280' }}>from last month</span>
+        <TrendingUp size={16} /> 12% <span style={{ color: '#6b7280' }}>from last month</span>
       </div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         <div style={{ width: '220px', height: '110px', overflow: 'hidden', position: 'relative' }}>
           <div style={{ width: '220px', height: '220px', borderRadius: '50%', border: '25px solid #f3f4f6', position: 'absolute', top: 0 }}></div>
-          <div style={{ width: '220px', height: '220px', borderRadius: '50%', border: '25px solid transparent', borderTopColor: colors[2], borderLeftColor: colors[2], position: 'absolute', top: 0, transform: 'rotate(45deg)' }}></div>
+          <div style={{ width: '220px', height: '220px', borderRadius: '50%', border: '25px solid transparent', borderTopColor: colors[2], borderLeftColor: colors[2], position: 'absolute', top: 0, transform: `rotate(${((kpis.fulfillment_rate || 0) / 100) * 180 - 90}deg)` }}></div>
           <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', textAlign: 'center' }}>
-            <div style={{ fontSize: '1.75rem', fontWeight: 800 }}>75%</div>
-            <div style={{ fontSize: '0.65rem', color: '#6b7280' }}>Of monthly income saved</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 800 }}>{kpis.fulfillment_rate}%</div>
+            <div style={{ fontSize: '0.65rem', color: '#6b7280' }}>Fulfillment Rate</div>
           </div>
         </div>
       </div>
@@ -409,30 +410,29 @@ const FinancialHealthCard = ({ colors }) => {
 
 const GoalTrackerCard = ({ colors }) => {
   const goals = [
-    { name: 'Reserve', current: 7000, target: 10000, time: 'Left to save 4 months', color: colors[2], icon: <Wallet size={18} /> },
-    { name: 'Travel', current: 2500, target: 4000, time: 'Left to save 3 months', color: colors[1], icon: <Download size={18} /> },
-    { name: 'Car', current: 1600, target: 20000, time: 'Left to save 3 years 6 months', color: colors[1], icon: <Activity size={18} /> },
-    { name: 'Real estate', current: 8300, target: 70000, time: 'Left to save 5 years 8 months', color: colors[1], icon: <Target size={18} /> },
+    { name: 'Total Orders', current: kpis.total_orders || 0, target: 15000, time: 'Target: 15k orders', color: colors[2], icon: <Target size={18} /> },
+    { name: 'Revenue (Rs.)', current: kpis.total_revenue || 0, target: 500000000, time: 'Target: 500M Rs.', color: colors[1], icon: <Wallet size={18} /> },
+    { name: 'Customers', current: kpis.unique_customers || 0, target: 10000, time: 'Target: 10k users', color: colors[1], icon: <User size={18} /> },
   ];
 
   return (
     <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Goal tracker</h3>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Platform Goals</h3>
         <button style={{ background: '#f9fafb', border: '1px solid #e5e7eb', padding: '6px 12px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><Plus size={14} /> Add goals</button>
       </div>
       <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>This year</div>
+        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Primary Goal</div>
         {goals.slice(0, 1).map((goal, i) => (
           <div key={i} style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
             <div style={{ width: 48, height: 48, borderRadius: '12px', background: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f3f4f6' }}>{goal.icon}</div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '0.85rem' }}>
                 <span style={{ fontWeight: 700 }}>{goal.name}</span>
-                <span style={{ color: '#6b7280' }}>${goal.current.toLocaleString()}/${goal.target.toLocaleString()}</span>
+                <span style={{ color: '#6b7280' }}>{goal.current.toLocaleString()}/{goal.target.toLocaleString()}</span>
               </div>
               <div style={{ height: '8px', background: '#f3f4f6', borderRadius: '4px', marginBottom: '5px' }}>
-                <div style={{ height: '100%', width: `${(goal.current / goal.target) * 100}%`, background: goal.color, borderRadius: '4px' }} />
+                <div style={{ height: '100%', width: `${Math.min((goal.current / goal.target) * 100, 100)}%`, background: goal.color, borderRadius: '4px' }} />
               </div>
               <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{goal.time}</div>
             </div>
@@ -440,17 +440,17 @@ const GoalTrackerCard = ({ colors }) => {
         ))}
       </div>
       <div>
-        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Long term</div>
+        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Other Targets</div>
         {goals.slice(1).map((goal, i) => (
           <div key={i} style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
             <div style={{ width: 48, height: 48, borderRadius: '12px', background: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #f3f4f6' }}>{goal.icon}</div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '0.85rem' }}>
                 <span style={{ fontWeight: 700 }}>{goal.name}</span>
-                <span style={{ color: '#6b7280' }}>${goal.current.toLocaleString()}/${goal.target.toLocaleString()}</span>
+                <span style={{ color: '#6b7280' }}>{goal.current.toLocaleString()}/{goal.target.toLocaleString()}</span>
               </div>
               <div style={{ height: '8px', background: '#f3f4f6', borderRadius: '4px', marginBottom: '5px' }}>
-                <div style={{ height: '100%', width: `${(goal.current / goal.target) * 100}%`, background: goal.color, borderRadius: '4px' }} />
+                <div style={{ height: '100%', width: `${Math.min((goal.current / goal.target) * 100, 100)}%`, background: goal.color, borderRadius: '4px' }} />
               </div>
               <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{goal.time}</div>
             </div>
@@ -469,12 +469,12 @@ const VitalStatsCard = ({ colors }) => {
       <div style={{ background: colors[0], padding: '2rem 1.5rem 1.5rem', color: 'white' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: 42, height: 42, borderRadius: '14px', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Heart size={22} fill="white" /></div>
-            <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Vital Stats</span>
+            <div style={{ width: 42, height: 42, borderRadius: '14px', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Activity size={22} fill="white" /></div>
+            <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Platform KPIs</span>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: '10px', fontSize: '0.75rem', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>Cholesterol <ChevronDown size={14} /></div>
+          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: '10px', fontSize: '0.75rem', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>Total Orders <ChevronDown size={14} /></div>
         </div>
-        <div style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '1.2rem', letterSpacing: '-0.02em' }}>150/200 <span style={{ fontSize: '1rem', fontWeight: 400, opacity: 0.7 }}>mg/dL</span></div>
+        <div style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '1.2rem', letterSpacing: '-0.02em' }}>{kpis.total_orders?.toLocaleString() || 0} <span style={{ fontSize: '1rem', fontWeight: 400, opacity: 0.7 }}>orders</span></div>
         <div style={{ height: '28px', display: 'flex', gap: '4px', marginBottom: '0.8rem' }}>
           {Array.from({ length: 18 }).map((_, i) => (
             <div key={i} style={{ flex: 1, background: i < 12 ? 'white' : 'rgba(255,255,255,0.25)', borderRadius: '3px' }} />
@@ -482,31 +482,31 @@ const VitalStatsCard = ({ colors }) => {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', opacity: 0.6, fontWeight: 600 }}>
           <span>0</span>
-          <span>100</span>
-          <span>200</span>
+          <span>5000</span>
+          <span>10000</span>
         </div>
         <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Cholesterol level:</span>
-          <span style={{ background: '#fff', color: '#166534', padding: '4px 12px', borderRadius: '14px', fontSize: '0.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: 6, height: 6, borderRadius: '50%', background: '#166534' }} /> Normal</span>
+          <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Order status:</span>
+          <span style={{ background: '#fff', color: '#166534', padding: '4px 12px', borderRadius: '14px', fontSize: '0.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: 6, height: 6, borderRadius: '50%', background: '#166534' }} /> Healthy</span>
         </div>
       </div>
       <div style={{ padding: '2rem 1.5rem' }}>
-        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111827', marginBottom: '1.5rem' }}>Report Details</h4>
-        <div style={{ fontSize: '3rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem' }}>75% <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af' }}>of the healthy limit</span></div>
+        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111827', marginBottom: '1.5rem' }}>Order Flow Summary</h4>
+        <div style={{ fontSize: '3rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem' }}>{kpis.fulfillment_rate || 0}% <span style={{ fontSize: '0.85rem', fontWeight: 500, color: '#9ca3af' }}>fulfillment rate</span></div>
         <div style={{ marginTop: '1.5rem' }}>
-          <div style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 800, marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>REMINDER:</div>
+          <div style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 800, marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>KEY METRICS:</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Calendar size={18} strokeWidth={2.5} /> Next check-up</div>
-              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>28 Feb 2025</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><User size={18} strokeWidth={2.5} /> Unique Customers</div>
+              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>{kpis.unique_customers?.toLocaleString() || 0}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Droplets size={18} strokeWidth={2.5} /> Hydrated</div>
-              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>3.5L / day</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><CheckCircle2 size={18} strokeWidth={2.5} /> Delivered Orders</div>
+              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>{kpis.delivered_orders?.toLocaleString() || 0}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><Dumbbell size={18} strokeWidth={2.5} /> Exercise</div>
-              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>30-min jogging</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4b5563', fontSize: '0.9rem', fontWeight: 500 }}><X size={18} strokeWidth={2.5} /> Cancelled Orders</div>
+              <span style={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem' }}>{kpis.cancelled_orders?.toLocaleString() || 0}</span>
             </div>
           </div>
         </div>
@@ -518,9 +518,9 @@ const VitalStatsCard = ({ colors }) => {
 const ActivityCard = ({ colors }) => {
   const tabs = ['All Activity', 'Daily Overview', 'Progress', 'Performance Insights'];
   const cards = [
-    { label: "Today's Steps", value: '8,200', unit: 'steps', info: 'Route: Home → Central Park', time: '45 min', icon: <Footprints size={18} />, color: colors[0] },
-    { label: "Workout", value: '450', unit: 'Kcal burned', info: 'Workout type: HIIT', time: '30 min', icon: <Flame size={18} />, color: colors[1] },
-    { label: "Sleep & Recovery", value: '85/100', unit: 'sleep', info: 'Deep Sleep: 2h 10m', time: '7h 45m', icon: <Moon size={18} />, color: colors[2] },
+    { label: "Active Restaurants", value: '248', unit: 'locations', info: 'Operational across network', time: 'Live', icon: <Pin size={18} />, color: colors[0] },
+    { label: "Service Hours", value: '14.5', unit: 'avg hours', info: 'Daily active operations', time: 'Daily', icon: <Clock size={18} />, color: colors[1] },
+    { label: "Peak Timing", value: '18:00', unit: 'PM', info: 'Highest order frequency', time: 'Peak', icon: <Activity size={18} />, color: colors[2] },
   ];
 
   return (
@@ -529,7 +529,7 @@ const ActivityCard = ({ colors }) => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[4]}22`, color: colors[4], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Activity size={20} strokeWidth={2.5} /></div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>My Activity</h3>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Operations Overview</h3>
           </div>
           <div style={{ display: 'flex', gap: '8px', background: '#f3f4f6', padding: '5px', borderRadius: '12px' }}>
             {tabs.map((tab, i) => (
@@ -555,32 +555,32 @@ const ActivityCard = ({ colors }) => {
         <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', marginBottom: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[2]}22`, color: colors[2], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Smile size={20} strokeWidth={2.5} /></div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Mental Health Score</h3>
+              <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[2]}22`, color: colors[2], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckCircle2 size={20} strokeWidth={2.5} /></div>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Platform Score</h3>
             </div>
             <ArrowRight size={20} color="#9ca3af" />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem 0' }}>
             <div style={{ width: '280px', height: '140px', overflow: 'hidden', position: 'relative' }}>
               <div style={{ width: '280px', height: '280px', borderRadius: '50%', border: '40px solid #f3f4f6', position: 'absolute', top: 0 }}></div>
-              <div style={{ width: '280px', height: '280px', borderRadius: '50%', border: '40px solid transparent', borderTopColor: colors[1], borderLeftColor: colors[1], position: 'absolute', top: 0, transform: 'rotate(45deg)' }}></div>
+              <div style={{ width: '280px', height: '280px', borderRadius: '50%', border: '40px solid transparent', borderTopColor: colors[1], borderLeftColor: colors[1], position: 'absolute', top: 0, transform: `rotate(${((kpis.fulfillment_rate || 0) / 100) * 180 - 90}deg)` }}></div>
               <div style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)', textAlign: 'center' }}>
-                <div style={{ fontSize: '2.4rem', fontWeight: 800 }}>78<span style={{ fontSize: '1rem', opacity: 0.5 }}>/100</span></div>
-                <div style={{ fontSize: '0.8rem', color: '#9ca3af', fontWeight: 600 }}>Mental Health Score</div>
+                <div style={{ fontSize: '2.4rem', fontWeight: 800 }}>{kpis.fulfillment_rate || 0}<span style={{ fontSize: '1rem', opacity: 0.5 }}>/100</span></div>
+                <div style={{ fontSize: '0.8rem', color: '#9ca3af', fontWeight: 600 }}>Fulfillment Score</div>
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', width: '100%', gap: '20px', marginTop: '2.5rem' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: '#9ca3af', fontWeight: 600, marginBottom: '8px' }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors[1] }} /> Mindfulness
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors[1] }} /> Delivery Success
                 </div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>82%</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>{kpis.fulfillment_rate || 0}%</div>
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: '#9ca3af', fontWeight: 600, marginBottom: '8px' }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors[3] }} /> Stress Management
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: colors[3] }} /> Customer Activity
                 </div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>68%</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>Active</div>
               </div>
             </div>
           </div>
@@ -590,27 +590,27 @@ const ActivityCard = ({ colors }) => {
           <div className="section-panel" style={{ padding: '1.8rem', borderRadius: '24px', marginBottom: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[3]}22`, color: colors[3], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Scale size={20} strokeWidth={2.5} /></div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Body Composition</h3>
+                <div style={{ width: 38, height: 38, borderRadius: '12px', background: `${colors[3]}22`, color: colors[3], display: 'flex', alignItems: 'center', justifyContent: 'center' }}><PieIcon size={20} strokeWidth={2.5} /></div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Category Insights</h3>
               </div>
               <ArrowRight size={20} color="#9ca3af" />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>68 <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Kg</span></div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your weight is within<br/>a healthy range</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{topProducts[0]?.product_name?.substring(0, 10)} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Top</span></div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Best performing<br/>category overall</div>
               </div>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>22%</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Your body fat is at<br/>an ideal level</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{categoryLevel.length} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Levels</span></div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Active category<br/>distribution depth</div>
               </div>
             </div>
           </div>
 
           <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, padding: '1.8rem', borderRadius: '24px', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
             <div style={{ position: 'relative', zIndex: 2 }}>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.4rem', lineHeight: '1.3' }}>Set and Achieve Your Health Goals!</h4>
-              <p style={{ fontSize: '0.8rem', opacity: 0.9, marginBottom: '1.2rem' }}>Your Goal: Lose 3kg in 1 month</p>
+              <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.4rem', lineHeight: '1.3' }}>Set and Achieve Your Growth Goals!</h4>
+              <p style={{ fontSize: '0.8rem', opacity: 0.9, marginBottom: '1.2rem' }}>Your Goal: Reach {((kpis.total_orders || 0) * 1.1).toLocaleString()} Orders</p>
               <button style={{ background: 'white', color: colors[0], border: 'none', padding: '10px 20px', borderRadius: '14px', fontSize: '0.85rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>Adjust My Goal <ArrowRight size={16} /></button>
             </div>
             <div style={{ position: 'absolute', right: '-10px', bottom: '-10px', width: '140px', height: '140px', background: 'rgba(255,255,255,0.15)', borderRadius: '50%' }}></div>
@@ -832,12 +832,12 @@ const DashboardOverview = ({ palette }) => {
 
       {/* Opportunities */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
-        {['Recoverable wasted spend', 'Unrealized volume', 'Auction competitiveness'].map((t, i) => (
+        {['Cancelled orders impact', 'Underperforming categories', 'Growth opportunities'].map((t, i) => (
           <div key={i} className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
             <span style={{ fontSize: '0.6rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: i === 0 ? '#fee2e2' : i === 1 ? '#fef3c7' : `${colors[4]}22`, color: i === 0 ? '#991b1b' : i === 1 ? '#92400e' : colors[4] }}>{['IMMEDIATE', 'NEAR-TERM', 'STRATEGIC'][i]}</span>
             <h3 style={{ fontSize: '0.9rem', margin: '10px 0 5px' }}>{t}</h3>
-            <p style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '10px' }}>{['Non-converting terms to negate.', 'Budget-capped campaigns losing 18-27% IS.', '59-73% IS lost to rank.'][i]}</p>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: colors[0] }}>{['~$181 / mo', '~$420 / mo', '2x reach'][i]}</div>
+            <p style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '10px' }}>{['High cancellation rates affect revenue.', 'Review product quality for low-rated items.', 'Expand top-selling categories to new regions.'][i]}</p>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: colors[0] }}>{[`Rs. ${Math.round((kpis.total_revenue || 0) * 0.05).toLocaleString()}`, `${categoryLevel.length - 2 || 0} categories`, `+15% reach`][i]}</div>
           </div>
         ))}
       </div>
@@ -854,15 +854,15 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.5fr', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>PLATFORM HEALTH RADAR</h4>
-            <div style={{ height: 260 }}><Radar key={palette.id} data={{ labels: ['Orders', 'Revenue', 'AOV', 'Fulfillment', 'Delivery', 'Retention', 'Traffic', 'Conv.'], datasets: [{ label: 'Current', data: [80, 85, 75, 95, 80, 70, 85, 90], backgroundColor: `${colors[0]}33`, borderColor: colors[0], borderWidth: 2 }, { label: 'Target', data: [90, 95, 85, 98, 90, 85, 95, 95], backgroundColor: `${colors[1]}11`, borderColor: colors[1], borderWidth: 2, borderDash: [5, 5] }] }} options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 260 }}><Radar key={palette.id} data={{ labels: ['Fulfillment', 'AOV', 'Conv. Rate', 'Delivery', 'Retention', 'Traffic'], datasets: [{ label: 'Current', data: [kpis.fulfillment_rate || 0, Math.min(((kpis.average_order_value || 0) / 10), 100), 85, 95, 80, 90], backgroundColor: `${colors[0]}33`, borderColor: colors[0], borderWidth: 2 }, { label: 'Target', data: [100, 100, 90, 98, 90, 95], backgroundColor: `${colors[1]}11`, borderColor: colors[1], borderWidth: 2, borderDash: [5, 5] }] }} options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>FINDINGS BY SEVERITY</h4>
-            <div style={{ height: 220, marginTop: '20px' }}><Doughnut key={palette.id} data={{ labels: ['Critical', 'High', 'Medium', 'Strength'], datasets: [{ data: [3, 4, 3, 2], backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <h4>ORDER STATUS DISTRIBUTION</h4>
+            <div style={{ height: 220, marginTop: '20px' }}><Doughnut key={palette.id} data={{ labels: orderStatus.map(o => o.order_status), datasets: [{ data: orderStatus.map(o => o.status_count), backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CATEGORY SCORE VS TARGET</h4>
-            <div style={{ height: 260 }}><Bar key={palette.id} data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100, grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
+            <h4>CATEGORY PERFORMANCE SCORE</h4>
+            <div style={{ height: 260 }}><Bar key={palette.id} data={{ labels: topProducts.slice(0, 8).map(p => p.product_name.substring(0, 10)), datasets: [{ data: topProducts.slice(0, 8).map(p => p.total_quantity_sold), backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
           </div>
         </div>
       </div>
@@ -901,17 +901,17 @@ const DashboardOverview = ({ palette }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.2fr', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CATEGORY PERFORMANCE DISTRIBUTION</h4>
-            <div style={{ height: 220 }}><Bar key={palette.id} data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
-            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px' }}>Weighted avg: <b style={{ color: '#059669' }}>8.4</b> • Exceeds target of 7.</div>
+            <div style={{ height: 220 }}><Bar key={palette.id} data={{ labels: categoryLevel.slice(0, 10).map(c => `L${c.category_level}`), datasets: [{ data: categoryLevel.slice(0, 10).map(c => c.product_count), backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
+            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px' }}>Product count by category level depth.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>DELIVERY TYPE MIX (REVENUE-WEIGHTED)</h4>
-            <div style={{ height: 220 }}><Doughnut key={palette.id} data={{ labels: ['Standard', 'Express', 'Same-Day'], datasets: [{ data: [45, 50, 5], backgroundColor: [colors[0], colors[1], colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
-            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px', textAlign: 'center' }}>Express dominates — optimize logistics for speed.</div>
+            <h4>PAYMENT CHANNEL MIX</h4>
+            <div style={{ height: 220 }}><Doughnut key={palette.id} data={{ labels: paymentChannel.slice(0, 4).map(p => p.payment_method), datasets: [{ data: paymentChannel.slice(0, 4).map(p => p.transaction_count), backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px', textAlign: 'center' }}>Breakdown of preferred payment channels.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>QS VS COST (SIZE = CONVERSIONS)</h4>
-            <div style={{ height: 220 }}><Bubble key={palette.id} data={{ datasets: [{ label: 'Ad Groups', data: [{ x: 3, y: 40, r: 8 }, { x: 5, y: 120, r: 25 }, { x: 6, y: 20, r: 12 }, { x: 8, y: 30, r: 15 }, { x: 10, y: 280, r: 35 }], backgroundColor: colors[1] + '80', borderColor: colors[1] }] }} options={{ maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Quality Score', font: { size: 9 } }, grid: { display: false } }, y: { title: { display: true, text: 'Spend ($)', font: { size: 9 } }, grid: { display: false } } } }} /></div>
+            <h4>PRICE VS VOLUME (SIZE = REVENUE)</h4>
+            <div style={{ height: 220 }}><Bubble key={palette.id} data={{ datasets: [{ label: 'Products', data: topProducts.slice(0, 10).map(p => ({ x: Number(p.avg_unit_price), y: Number(p.total_quantity_sold), r: Math.min(Number(p.total_revenue) / 100000, 30) + 5 })), backgroundColor: colors[1] + '80', borderColor: colors[1] }] }} options={{ maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Price (Rs.)', font: { size: 9 } }, grid: { display: false } }, y: { title: { display: true, text: 'Volume Sold', font: { size: 9 } }, grid: { display: false } } } }} /></div>
           </div>
         </div>
       </div>
@@ -928,8 +928,8 @@ const DashboardOverview = ({ palette }) => {
                 data={{ 
                   labels: trendData.map(d => d.date), 
                   datasets: [{ 
-                    label: 'Conv. Value', 
-                    data: trendData.map(d => d.spend * 15), 
+                    label: 'Daily Revenue', 
+                    data: trendData.map(d => d.spend), 
                     borderColor: colors[0], 
                     backgroundColor: `${colors[0]}22`, 
                     fill: true, 
@@ -957,20 +957,18 @@ const DashboardOverview = ({ palette }) => {
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CATEGORY PERFORMANCE (SIZE = ORDERS)</h4>
+            <h4>CATEGORY PERFORMANCE (SIZE = WEIGHT)</h4>
             <div style={{ height: 260 }}>
               <Bubble 
                 key={palette.id}
                 data={{ 
                   datasets: [{ 
-                    label: 'Ad Groups', 
-                    data: [
-                      { x: 3, y: 40, r: 12 }, 
-                      { x: 5, y: 120, r: 28 }, 
-                      { x: 6, y: 20, r: 15 }, 
-                      { x: 8, y: 30, r: 20 }, 
-                      { x: 10, y: 280, r: 40 }
-                    ], 
+                    label: 'Categories', 
+                    data: categoryLevel.slice(0, 10).map(c => ({
+                      x: Number(c.category_level),
+                      y: Number(c.product_count),
+                      r: Math.min(Number(c.product_count) / 10, 40) + 10
+                    })), 
                     backgroundColor: 'rgba(234, 88, 12, 0.5)', 
                     borderColor: 'rgb(234, 88, 12)',
                     borderWidth: 1
@@ -994,17 +992,14 @@ const DashboardOverview = ({ palette }) => {
                   }, 
                   scales: { 
                     x: { 
-                      title: { display: true, text: 'Performance Score', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { top: 10 } },
-                      min: 2,
-                      max: 11,
+                      title: { display: true, text: 'Category Level', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { top: 10 } },
                       grid: { display: false },
                       ticks: { font: { size: 11 } }
                     }, 
                     y: { 
-                      title: { display: true, text: 'Revenue (Rs. K)', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { bottom: 10 } },
-                      min: 0,
-                      max: 350,
-                      grid: { display: false },
+                      title: { display: true, text: 'Product Count', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { bottom: 10 } },
+                      grid: { color: '#f3f4f6' },
+                      beginAtZero: true,
                       ticks: { font: { size: 11 } }
                     } 
                   } 
@@ -1034,58 +1029,58 @@ const DashboardOverview = ({ palette }) => {
       <div className="section-panel">
         <div className="section-header"><h2>Performance Pulse — 30-Day Trends</h2></div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
-          {['DAILY REVENUE', 'DAILY ORDERS', 'AVERAGE OVD', 'FULFILLMENT RATE'].map((t, i) => (
+          {['TOTAL REVENUE', 'TOTAL ORDERS', 'AVERAGE AOV', 'FULFILLMENT RATE'].map((t, i) => (
             <div key={i} className="chart-item" style={{ padding: '1rem', border: '1px solid #f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6b7280', marginBottom: '5px' }}>{t}</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827' }}>{['Rs. 1.2M', '98 / day', 'Rs. 10.2K', '94.5%'][i]}</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827' }}>{[`Rs. ${((kpis.total_revenue || 0) / 1000000).toFixed(1)}M`, `${kpis.total_orders || 0}`, `Rs. ${Math.round(kpis.average_order_value || 0).toLocaleString()}`, `${kpis.fulfillment_rate || 0}%`][i]}</div>
               <div style={{ height: 60 }}><Line key={palette.id} data={{ labels: trendData.map((_, j) => j), datasets: [{ data: trendData.map(d => i === 0 ? d.spend : i === 1 ? d.conv : i === 2 ? Math.random()*20 : d.roas), borderColor: colors[i], backgroundColor: `${colors[i]}11`, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false, grid: { display: false } }, y: { display: false, grid: { display: false } } } }} /></div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Device, Schedule & Dayparting */}
+      {/* Platform Trends & Distribution */}
       <div className="section-panel">
-        <div className="section-header"><h2>Device, Schedule & Dayparting</h2></div>
+        <div className="section-header"><h2>Platform Trends & Distribution</h2></div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>DEVICE MIX (SPEND)</h4>
-            <div style={{ height: 180 }}><Doughnut key={palette.id} data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [70, 15, 10, 5], backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <h4>WAREHOUSE MIX (REVENUE)</h4>
+            <div style={{ height: 180 }}><Doughnut key={palette.id} data={{ labels: warehouseShare.slice(0, 4).map(w => `WH-${w.warehouse_id}`), datasets: [{ data: warehouseShare.slice(0, 4).map(w => w.total_revenue), backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>ROAS BY DEVICE</h4>
-            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
+            <h4>ORDERS BY CATEGORY</h4>
+            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: categoryLevel.slice(0, 4).map(c => `L${c.category_level}`), datasets: [{ data: categoryLevel.slice(0, 4).map(c => c.product_count), backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CONVERSIONS BY HOUR</h4>
-            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ label: 'Conversions', data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
+            <h4>HOURLY TRAFFIC (EST.)</h4>
+            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ label: 'Traffic', data: Array.from({ length: 24 }, (_, hour) => { const isPeak = (hour >= 11 && hour <= 14) || (hour >= 17 && hour <= 20); return Math.floor((isPeak ? 15 : 5) + Math.random() * 10); }), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CONVERSIONS BY DAY</h4>
-            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Conversions', data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
+            <h4>ORDERS BY DAY (LAST 7)</h4>
+            <div style={{ height: 180 }}><Bar key={palette.id} data={{ labels: trendData.slice(0, 7).map(t => new Date(t.date).toLocaleDateString('en-US', { weekday: 'short' })), datasets: [{ label: 'Orders', data: trendData.slice(0, 7).map(t => t.conv), backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
           </div>
         </div>
-        <h4>CONVERSION HEATMAP — DAY × HOUR</h4>
+        <h4>ORDER TREND HEATMAP — DAY × HOUR</h4>
         <div style={{ marginTop: '20px' }}>
           <Heatmap data={heatmapData} palette={palette} />
         </div>
       </div>
 
-      {/* Waste vs Opportunity Pareto */}
+      {/* Category vs Payment Pareto */}
       <div className="section-panel">
-        <div className="section-header"><h2>Waste vs Opportunity Pareto</h2></div>
-        <p style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>Where the biggest dollars are concentrated — 80/20 view of wasteful terms and high-ROAS opportunities.</p>
+        <div className="section-header"><h2>Category vs Payment Distribution Pareto</h2></div>
+        <p style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>Where the highest volumes are concentrated — 80/20 view of categories and payment channels.</p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4 style={{ color: colors[0], marginBottom: '15px' }}>WASTE PARETO (ADD AS NEGATIVES)</h4>
+            <h4 style={{ color: colors[0], marginBottom: '15px' }}>CATEGORY DISTRIBUTION PARETO</h4>
             <div style={{ height: 320 }}>
-              <Bar key={palette.id} data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Waste ($)', data: wasteParetoData.spend, backgroundColor: colors[0], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Waste ($)', colors[0])} />
+              <Bar key={palette.id} data={{ labels: wasteParetoData.labels, datasets: [{ type: 'bar', label: 'Products', data: wasteParetoData.spend, backgroundColor: colors[0], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: wasteParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Product Count', colors[0])} />
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4 style={{ color: colors[2], marginBottom: '15px' }}>OPPORTUNITY PARETO (ADD AS EXACT-MATCH)</h4>
+            <h4 style={{ color: colors[2], marginBottom: '15px' }}>PAYMENT CHANNEL PARETO</h4>
             <div style={{ height: 320 }}>
-              <Bar key={palette.id} data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Current spend ($)', data: opportunityParetoData.spend, backgroundColor: colors[2], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Spend ($)', colors[2])} />
+              <Bar key={palette.id} data={{ labels: opportunityParetoData.labels, datasets: [{ type: 'bar', label: 'Transactions', data: opportunityParetoData.spend, backgroundColor: colors[2], borderRadius: 4, yAxisID: 'y' }, { type: 'line', label: 'Cumulative %', data: opportunityParetoData.cumulative, borderColor: '#111827', borderWidth: 2, pointRadius: 2, yAxisID: 'y1', tension: 0.3 }] }} options={paretoOptions('Transaction Count', colors[2])} />
             </div>
           </div>
         </div>
