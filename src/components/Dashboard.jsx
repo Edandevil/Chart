@@ -862,7 +862,7 @@ const DashboardOverview = ({ palette }) => {
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>ORDER STATUS DISTRIBUTION</h4>
-            <div style={{ height: 220, marginTop: '20px' }}><Doughnut key={palette.id} data={{ labels: orderStatus.map(o => o.order_status), datasets: [{ data: orderStatus.map(o => o.status_count), backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ height: 220, marginTop: '20px' }}><Doughnut key={palette.id} data={{ labels: orderStatus.map(o => o.order_status), datasets: [{ data: orderStatus.map(o => o.order_count), backgroundColor: [colors[0], colors[1], colors[2], colors[3]], borderWidth: 3, borderColor: '#ffffff', cutout: '70%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CATEGORY PERFORMANCE SCORE</h4>
