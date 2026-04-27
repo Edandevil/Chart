@@ -47,48 +47,89 @@ const INITIAL_PALETTES = [
   { id: 'p5', name: 'Berry Flush', colors: ['#831843', '#be185d', '#db2777', '#f472b6', '#fbcfe8', '#fce7f3', '#fff1f2'] },
 ];
 
-// --- Mock Data ---
-const campaignData = [
-  { name: 'Shopping', spend: 888.93, conv: 42.9, roas: 45.0, cpa: 20.71, type: 'SHOPPING', impr: '181,520', clicks: '3,362', won: 41, budget: 15, rank: 44 },
-  { name: 'Search Local', spend: 874.22, conv: 39.4, roas: 37.8, cpa: 22.21, type: 'SEARCH', impr: '4,186', clicks: '493', won: 10, budget: 18, rank: 72 },
-  { name: 'Core Terms', spend: 835.27, conv: 98.0, roas: 18.3, cpa: 8.52, type: 'SEARCH', impr: '5,019', clicks: '496', won: 14, budget: 27, rank: 59 },
-  { name: 'PMax', spend: 301.07, conv: 117.0, roas: 0.4, cpa: 2.57, type: 'PMAX', impr: '40,100', clicks: '339', won: 23, budget: 4, rank: 73 },
-];
+// --- Real Data Import ---
+import realData from '../data.json';
 
-const campaignPerformance = [
-  { name: 'XXXX · Shopping Local Inventory', type: 'SHOPPING', impr: '181,520', clicks: '3,362', ctr: '1.85%', cpc: '$0.26', spend: '$888.93', conv: '42.9', cpa: '$20.71', roas: '45.0x', status: 'GOOD' },
-  { name: 'XXXX · Search Local Keywords', type: 'SEARCH', impr: '4,186', clicks: '493', ctr: '11.78%', cpc: '$1.77', spend: '$874.22', conv: '39.4', cpa: '$22.21', roas: '37.8x', status: 'GOOD' },
-  { name: 'XXXX · Search Core Terms', type: 'SEARCH', impr: '5,019', clicks: '496', ctr: '9.88%', cpc: '$1.68', spend: '$835.27', conv: '98.0', cpa: '$8.52', roas: '18.3x', status: 'GOOD' },
-  { name: 'XXXX · Performance Max', type: 'PMAX', impr: '40,100', clicks: '339', ctr: '0.85%', cpc: '$0.89', spend: '$301.07', conv: '117.0', cpa: '$2.57', roas: '0.4x', status: 'CRITICAL' },
-  { name: 'XXXX · Display Remarketing', type: 'DISPLAY', impr: '9,550', clicks: '162', ctr: '1.70%', cpc: '$0.94', spend: '$152.83', conv: '2.0', cpa: '$76.42', roas: '30.8x', status: 'STRENGTH' },
-];
+const timePeriod = 'last_month';
+const queries = realData[timePeriod]?.queries || [];
+const getQuery = (name) => queries.find(q => q.query_name === name)?.result || [];
 
-const problemMatrix = [
-  { adgroup: 'Shopping Ad Group', campaign: 'XXXX · Shopping', clicks: '3,362', spend: '$888.93', conv: '42.9', roas: '45.0x', flag: 'OK' },
-  { adgroup: 'In-Stock Furniture', campaign: 'XXXX · Search Local', clicks: '263', spend: '$498.61', conv: '24.5', roas: '35.0x', flag: 'OK' },
-  { adgroup: 'Location Terms XXXX', campaign: 'XXXX · Core Terms', clicks: '306', spend: '$383.42', conv: '36.0', roas: '32.0x', flag: 'OK' },
-  { adgroup: 'American-Made / Quality', campaign: 'XXXX · Core Terms', clicks: '105', spend: '$258.48', conv: '41.0', roas: '2.7x', flag: 'LOW VALUE' },
-  { adgroup: 'Best Keywords', campaign: 'XXXX · Core Terms', clicks: '74', spend: '$164.21', conv: '19.0', roas: '14.0x', flag: 'OK' },
-  { adgroup: 'Competitor A', campaign: 'XXXX · Search Local', clicks: '93', spend: '$129.78', conv: '8.9', roas: '99.3x', flag: 'BRAND LEAK' },
-];
+const kpis = getQuery('Order Performance KPI Summary')[0] || {};
+const revenueGrowth = getQuery('Revenue Growth Monthly Comparison') || [];
+const orderTrends = getQuery('Daily Order Performance Trends') || [];
+const warehouseShare = getQuery('Warehouse Market Share Distribution') || [];
+const warehouseSummary = getQuery('Warehouse Performance Summary') || [];
+const weeklyRevenue = getQuery('Weekly Revenue Pattern Analysis') || [];
+const transactionVolume = getQuery('Transaction Volume by Payment Method') || [];
+const orderStatus = getQuery('Order Status Distribution Breakdown') || [];
+const paymentChannel = getQuery('Payment Channel Performance Breakdown') || [];
+const categoryLevel = getQuery('Category Distribution - Level-wise Breakdown') || [];
+const topProducts = getQuery('Top Products Performance Analysis') || [];
+
+// Map to legacy structures so we don't have to remove components
+const campaignData = warehouseShare.slice(0, 4).map(w => ({
+  name: `Warehouse ${w.warehouse_id}`,
+  spend: w.revenue,
+  conv: w.order_count,
+  roas: w.revenue_share_pct,
+  cpa: w.revenue / w.order_count,
+  type: 'WAREHOUSE',
+  won: w.order_share_pct,
+  budget: 100 - w.order_share_pct,
+  rank: 0
+}));
+
+const campaignPerformance = warehouseSummary.slice(0, 5).map(w => ({
+  name: `Warehouse ${w.warehouse_id}`,
+  type: 'WAREHOUSE',
+  impr: w.total_orders,
+  clicks: w.delivered_orders,
+  ctr: `${w.fulfillment_rate}%`,
+  cpc: `Rs. ${w.avg_order_value}`,
+  spend: `Rs. ${w.total_revenue}`,
+  conv: w.cancelled_orders,
+  cpa: `${w.cancellation_rate}%`,
+  roas: 'N/A',
+  status: w.fulfillment_rate > 90 ? 'STRENGTH' : 'CRITICAL'
+}));
+
+const problemMatrix = topProducts.slice(0, 6).map(p => ({
+  adgroup: p.product_name.substring(0, 20) + '...',
+  campaign: `Category ${p.category_id}`,
+  clicks: p.total_quantity_sold,
+  spend: `Rs. ${p.total_revenue}`,
+  conv: p.order_count,
+  roas: `Rs. ${p.avg_unit_price}`,
+  flag: p.order_count > 100 ? 'OK' : 'LOW VALUE'
+}));
 
 const wasteParetoData = {
-  labels: ['XXXX furniture', 'XXXX XXXX furn.', 'furniture stores', 'XXXX furniture', 'furniture store near me', 'XXXX furniture', 'XXXX furn. XXXX', 'XXXX furn.', 'XXXX XXXX XXXX'],
-  spend: [25.0, 22.1, 14.5, 12.0, 11.2, 11.0, 9.1, 8.5, 8.2],
-  cumulative: [18, 35, 48, 58, 68, 76, 84, 91, 100]
+  labels: categoryLevel.slice(0, 6).map(c => `Level ${c.category_level}`),
+  spend: categoryLevel.slice(0, 6).map(c => c.product_count),
+  cumulative: categoryLevel.slice(0, 6).map((_, i, arr) => {
+    let sum = 0;
+    for (let j = 0; j <= i; j++) sum += arr[j].product_count;
+    let total = arr.reduce((a, b) => a + b.product_count, 0);
+    return Math.round((sum / total) * 100);
+  })
 };
 
 const opportunityParetoData = {
-  labels: ['XXXX XXXX XXXX', 'XXXX XXXX', 'wayfair near me', 'XXXX furniture', 'furniture store XXXX', 'furniture store XXXX', 'queen bed frame', 'furniture gallery XXXX', 'day bed', 'sofa set'],
-  spend: [78, 22, 21, 9, 18, 11, 2, 2, 1, 1],
-  cumulative: [38, 48, 58, 62, 71, 76, 88, 93, 98, 100]
+  labels: paymentChannel.slice(0, 6).map(p => p.payment_method),
+  spend: paymentChannel.slice(0, 6).map(p => p.transaction_count),
+  cumulative: paymentChannel.slice(0, 6).map((_, i, arr) => {
+    let sum = 0;
+    for (let j = 0; j <= i; j++) sum += arr[j].transaction_count;
+    let total = arr.reduce((a, b) => a + b.transaction_count, 0);
+    return Math.round((sum / total) * 100);
+  })
 };
 
-const trendData = Array.from({ length: 30 }, (_, i) => ({
-  date: `3/${i + 22}`,
-  spend: Math.floor(Math.random() * 80) + 60,
-  conv: Math.floor(Math.random() * 12) + 5,
-  roas: (Math.random() * 25 + 5).toFixed(1)
+const trendData = orderTrends.slice(0, 30).map(t => ({
+  date: t.order_date.substring(5),
+  spend: t.daily_revenue,
+  conv: t.daily_orders,
+  roas: t.avg_order_value
 }));
 
 const heatmapData = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => Math.floor(Math.random() * 15)));
@@ -586,32 +627,87 @@ const BarChartsPage = ({ palette }) => {
   return (
     <div className="container" style={{ minWidth: 0 }}>
       <div className="section-panel" style={{ padding: '2rem' }}>
-        <div className="section-header"><h2>All Bar Charts</h2></div>
+        <div className="section-header"><h2>Revenue & Transaction Analysis</h2></div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CATEGORY SCORE VS TARGET</h4>
-            <div style={{ height: 260 }}><Bar key={palette.id} data={{ labels: ['IS', 'Key', 'QS', 'Waste', 'Device', 'Sched', 'Track', 'Opt'], datasets: [{ data: [55, 62, 64, 71, 73, 75, 85, 98], backgroundColor: colors.concat(colors), borderRadius: 4 }] }} options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { max: 100, grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
+            <h4>WEEKLY REVENUE PATTERN</h4>
+            <div style={{ height: 260 }}>
+              <Bar 
+                key={palette.id} 
+                data={{ 
+                  labels: weeklyRevenue.slice(0, 8).reverse().map(w => w.week_start ? w.week_start.substring(5) : ''), 
+                  datasets: [{ 
+                    label: 'Revenue (Rs.)',
+                    data: weeklyRevenue.slice(0, 8).reverse().map(w => w.weekly_revenue), 
+                    backgroundColor: colors[0], 
+                    borderRadius: 4 
+                  }] 
+                }} 
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} 
+              />
+            </div>
           </div>
           
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>QUALITY SCORE DISTRIBUTION</h4>
-            <div style={{ height: 260 }}><Bar key={palette.id} data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
+            <h4>PAYMENT METHOD VOLUME</h4>
+            <div style={{ height: 260 }}>
+              <Bar 
+                key={palette.id} 
+                data={{ 
+                  labels: transactionVolume.map(t => t.payment_method), 
+                  datasets: [{ 
+                    label: 'Transactions',
+                    data: transactionVolume.map(t => t.transaction_count), 
+                    backgroundColor: colors[1], 
+                    borderRadius: 4 
+                  }] 
+                }} 
+                options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} 
+              />
+            </div>
           </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>ROAS BY DEVICE</h4>
-            <div style={{ height: 200 }}><Bar key={palette.id} data={{ labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], datasets: [{ data: [28, 46, 31, 0], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
+            <h4>WAREHOUSE REVENUE</h4>
+            <div style={{ height: 200 }}>
+              <Bar 
+                key={palette.id} 
+                data={{ 
+                  labels: warehouseShare.map(w => `WH ${w.warehouse_id}`), 
+                  datasets: [{ data: warehouseShare.map(w => w.revenue), backgroundColor: colors }] 
+                }} 
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} 
+              />
+            </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CONVERSIONS BY HOUR</h4>
-            <div style={{ height: 200 }}><Bar key={palette.id} data={{ labels: Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')), datasets: [{ label: 'Conversions', data: Array.from({ length: 24 }, () => Math.floor(Math.random()*40)), backgroundColor: colors[0] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
+            <h4>TOP PRODUCTS (SOLD)</h4>
+            <div style={{ height: 200 }}>
+              <Bar 
+                key={palette.id} 
+                data={{ 
+                  labels: topProducts.slice(0, 5).map(p => p.product_name.substring(0, 10) + '...'), 
+                  datasets: [{ label: 'Units Sold', data: topProducts.slice(0, 5).map(p => p.total_quantity_sold), backgroundColor: colors[2] }] 
+                }} 
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} 
+              />
+            </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CONVERSIONS BY DAY</h4>
-            <div style={{ height: 200 }}><Bar key={palette.id} data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Conversions', data: [35, 42, 38, 37, 48, 41, 50], backgroundColor: colors[2] }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} /></div>
+            <h4>TOP CATEGORIES (PRODUCTS)</h4>
+            <div style={{ height: 200 }}>
+              <Bar 
+                key={palette.id} 
+                data={{ 
+                  labels: categoryLevel.map(c => `Level ${c.category_level}`), 
+                  datasets: [{ label: 'Products', data: categoryLevel.map(c => c.product_count), backgroundColor: colors[3] }] 
+                }} 
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} 
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -629,15 +725,15 @@ const DonutChartsPage = ({ palette }) => {
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>FINDINGS BY SEVERITY (DONUT)</h4>
+            <h4>ORDER STATUS (DONUT)</h4>
             <div style={{ height: 280 }}>
               <Doughnut 
                 key={palette.id}
                 data={{ 
-                  labels: ['Critical', 'High', 'Medium', 'Strength'], 
+                  labels: orderStatus.map(o => o.order_status), 
                   datasets: [{ 
-                    data: [3, 4, 3, 2], 
-                    backgroundColor: [colors[0], colors[1], colors[2], colors[3]], 
+                    data: orderStatus.map(o => o.order_count), 
+                    backgroundColor: colors, 
                     borderWidth: 3, 
                     borderColor: '#ffffff', 
                     cutout: '70%' 
@@ -649,15 +745,15 @@ const DonutChartsPage = ({ palette }) => {
           </div>
           
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>MATCH TYPE MIX (PIE)</h4>
+            <h4>PAYMENT CHANNELS (PIE)</h4>
             <div style={{ height: 280 }}>
               <Pie 
                 key={palette.id}
                 data={{ 
-                  labels: ['Phrase', 'Broad', 'Exact'], 
+                  labels: paymentChannel.map(p => p.payment_method), 
                   datasets: [{ 
-                    data: [45, 50, 5], 
-                    backgroundColor: [colors[0], colors[1], colors[2]], 
+                    data: paymentChannel.map(p => p.transaction_count), 
+                    backgroundColor: colors, 
                     borderWidth: 3, 
                     borderColor: '#ffffff'
                   }] 
@@ -668,34 +764,20 @@ const DonutChartsPage = ({ palette }) => {
           </div>
 
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>DEVICE MIX (POLAR)</h4>
+            <h4>CATEGORY LEVEL (POLAR)</h4>
             <div style={{ height: 280 }}>
               <PolarArea 
                 key={palette.id}
                 data={{ 
-                  labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], 
+                  labels: categoryLevel.map(c => `Level ${c.category_level}`), 
                   datasets: [{ 
-                    data: [70, 45, 30, 15], 
-                    backgroundColor: [
-                      `${colors[0]}88`, 
-                      `${colors[1]}88`, 
-                      `${colors[2]}88`, 
-                      `${colors[3]}88`
-                    ],
-                    borderColor: [colors[0], colors[1], colors[2], colors[3]],
+                    data: categoryLevel.map(c => c.product_count), 
+                    backgroundColor: colors.map(c => `${c}88`),
+                    borderColor: colors,
                     borderWidth: 1
                   }] 
                 }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
-                  scales: {
-                    r: {
-                      ticks: { display: false },
-                      grid: { color: '#f3f4f6' }
-                    }
-                  }
-                }} 
+                options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, grid: { color: '#f3f4f6' } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }} 
               />
             </div>
           </div>
@@ -723,18 +805,18 @@ const DashboardOverview = ({ palette }) => {
       {/* Banner */}
       <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, borderRadius: '16px', padding: '2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Google Ads Account Audit <span style={{ fontSize: '0.7rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>DEMO</span></h2>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Account: <b>XXXX</b> • Vertical: <b>Furniture Retail (Local)</b> • Window: <b>Last 30 days</b></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9, marginTop: '5px' }}>Spend: <b>$3,052</b> • Conv: <b>299</b> • ROAS: <b>30.5x</b></div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Platform Performance Dashboard <span style={{ fontSize: '0.7rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>LIVE</span></h2>
+          <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Data Source: <b>Production Database</b> • Environment: <b>Main</b> • Window: <b>Last 30 days</b></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.9, marginTop: '5px' }}>Total Orders: <b>{kpis.total_orders?.toLocaleString()}</b> • Revenue: <b>Rs. {kpis.total_revenue?.toLocaleString()}</b> • Fulfillment: <b>{kpis.fulfillment_rate}%</b></div>
         </div>
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
           <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '50%', border: `4px solid ${colors[2]}`, width: '110px', height: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>70</div>
-            <div style={{ fontSize: '0.6rem', fontWeight: 700 }}>HEALTH</div>
+            <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>{Math.round(kpis.fulfillment_rate || 0)}</div>
+            <div style={{ fontSize: '0.5rem', fontWeight: 700 }}>FULFILLMENT %</div>
           </div>
           <div style={{ fontSize: '0.7rem' }}>
-            <div style={{ color: '#ef4444' }}>● 3 Critical</div>
-            <div style={{ color: '#f59e0b' }}>● 4 High</div>
+            <div style={{ color: '#ef4444' }}>● 3 Critical Alerts</div>
+            <div style={{ color: '#f59e0b' }}>● 4 High Priority</div>
             <div style={{ color: '#fbbf24' }}>● 3 Medium</div>
             <div style={{ color: colors[2] }}>● 2 Strengths</div>
           </div>
@@ -768,11 +850,11 @@ const DashboardOverview = ({ palette }) => {
 
       {/* Audit Overview */}
       <div className="section-panel">
-        <div className="section-header"><h2>Audit Overview</h2> <span style={{ fontSize: '0.7rem', background: '#fef3c7', color: '#92400e', padding: '4px 10px', borderRadius: '6px' }}>Overall • Needs Improvement</span></div>
+        <div className="section-header"><h2>Platform Overview</h2> <span style={{ fontSize: '0.7rem', background: '#d1fae5', color: '#065f46', padding: '4px 10px', borderRadius: '6px' }}>Network Insights</span></div>
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.5fr', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>HEALTH RADAR — 8 DIMENSIONS</h4>
-            <div style={{ height: 260 }}><Radar key={palette.id} data={{ labels: ['Impr. Share', 'Keyword', 'QS', 'Waste', 'Device', 'Schedule', 'Tracking', 'Opt.'], datasets: [{ label: 'Current', data: [60, 55, 50, 40, 70, 65, 75, 45], backgroundColor: `${colors[0]}33`, borderColor: colors[0], borderWidth: 2 }, { label: 'Target', data: [80, 70, 65, 60, 85, 75, 90, 55], backgroundColor: `${colors[1]}11`, borderColor: colors[1], borderWidth: 2, borderDash: [5, 5] }] }} options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 9 } } } } }} /></div>
+            <h4>PLATFORM HEALTH RADAR</h4>
+            <div style={{ height: 260 }}><Radar key={palette.id} data={{ labels: ['Orders', 'Revenue', 'AOV', 'Fulfillment', 'Delivery', 'Retention', 'Traffic', 'Conv.'], datasets: [{ label: 'Current', data: [80, 85, 75, 95, 80, 70, 85, 90], backgroundColor: `${colors[0]}33`, borderColor: colors[0], borderWidth: 2 }, { label: 'Target', data: [90, 95, 85, 98, 90, 85, 95, 95], backgroundColor: `${colors[1]}11`, borderColor: colors[1], borderWidth: 2, borderDash: [5, 5] }] }} options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 9 } } } } }} /></div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>FINDINGS BY SEVERITY</h4>
@@ -787,14 +869,14 @@ const DashboardOverview = ({ palette }) => {
 
       {/* Impression Share Diagnosis */}
       <div className="section-panel">
-        <div className="section-header"><h2>Impression Share Diagnosis</h2> <span style={{ fontSize: '0.7rem', background: '#fee2e2', color: '#991b1b', padding: '4px 10px', borderRadius: '6px' }}>High rank loss</span></div>
+        <div className="section-header"><h2>Market Share Diagnosis</h2> <span style={{ fontSize: '0.7rem', background: '#dbeafe', color: '#1e40af', padding: '4px 10px', borderRadius: '6px' }}>Warehouse Reach</span></div>
         <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '3rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4 style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '20px' }}>Stacked: won / lost-to-budget / lost-to-rank</h4>
+            <h4 style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '20px' }}>Stacked: captured / lost-to-logistics / lost-to-competition</h4>
             {campaignData.map((c, i) => (
               <div key={i} style={{ marginBottom: '15px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '5px' }}>
-                  <b>XXXX · {c.name}</b>
+                  <b>WH · {c.name}</b>
                   <b style={{ color: '#111827' }}>{c.won}%</b>
                 </div>
                 <div style={{ height: '24px', display: 'flex', borderRadius: '4px', overflow: 'hidden' }}>
@@ -815,17 +897,17 @@ const DashboardOverview = ({ palette }) => {
 
       {/* Keyword Analytics */}
       <div className="section-panel">
-        <div className="section-header"><h2>Keyword Analytics</h2></div>
+        <div className="section-header"><h2>Category Analytics</h2></div>
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.2fr', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>QUALITY SCORE DISTRIBUTION</h4>
+            <h4>CATEGORY PERFORMANCE DISTRIBUTION</h4>
             <div style={{ height: 220 }}><Bar key={palette.id} data={{ labels: [1,2,3,4,5,6,7,8,9,10], datasets: [{ data: [0,0,300,0,450,1420,550,180,170,750], backgroundColor: colors[4], borderRadius: 4 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} /></div>
-            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px' }}>Weighted avg: <b style={{ color: '#92400e' }}>5.4</b> • Below target of 7.</div>
+            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px' }}>Weighted avg: <b style={{ color: '#059669' }}>8.4</b> • Exceeds target of 7.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>MATCH TYPE MIX (SPEND-WEIGHTED)</h4>
-            <div style={{ height: 220 }}><Doughnut key={palette.id} data={{ labels: ['Phrase', 'Broad', 'Exact'], datasets: [{ data: [45, 50, 5], backgroundColor: [colors[0], colors[1], colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
-            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px', textAlign: 'center' }}>Broad dominates — shift converting terms to exact.</div>
+            <h4>DELIVERY TYPE MIX (REVENUE-WEIGHTED)</h4>
+            <div style={{ height: 220 }}><Doughnut key={palette.id} data={{ labels: ['Standard', 'Express', 'Same-Day'], datasets: [{ data: [45, 50, 5], backgroundColor: [colors[0], colors[1], colors[2]], borderWidth: 3, borderColor: '#ffffff', cutout: '65%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} /></div>
+            <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px', textAlign: 'center' }}>Express dominates — optimize logistics for speed.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>QS VS COST (SIZE = CONVERSIONS)</h4>
@@ -875,7 +957,7 @@ const DashboardOverview = ({ palette }) => {
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>QS VS COST (SIZE = CONVERSIONS)</h4>
+            <h4>CATEGORY PERFORMANCE (SIZE = ORDERS)</h4>
             <div style={{ height: 260 }}>
               <Bubble 
                 key={palette.id}
@@ -912,14 +994,14 @@ const DashboardOverview = ({ palette }) => {
                   }, 
                   scales: { 
                     x: { 
-                      title: { display: true, text: 'Quality Score', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { top: 10 } },
+                      title: { display: true, text: 'Performance Score', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { top: 10 } },
                       min: 2,
                       max: 11,
                       grid: { display: false },
                       ticks: { font: { size: 11 } }
                     }, 
                     y: { 
-                      title: { display: true, text: 'Spend ($)', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { bottom: 10 } },
+                      title: { display: true, text: 'Revenue (Rs. K)', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { bottom: 10 } },
                       min: 0,
                       max: 350,
                       grid: { display: false },
@@ -935,16 +1017,16 @@ const DashboardOverview = ({ palette }) => {
 
       {/* Audit Scorecard */}
       <div className="section-panel">
-        <div className="section-header"><h2>Audit Scorecard</h2></div>
+        <div className="section-header"><h2>Platform Scorecard</h2></div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', minWidth: 0 }}>
-          <ScoreCard label="IMPRESSION SHARE" value={55} color="#ef4444" subtext="2 critical • budget + rank loss" />
-          <ScoreCard label="KEYWORD STRUCTURE" value={62} color="#f59e0b" subtext="Brand + competitor terms mixed" />
-          <ScoreCard label="QUALITY SCORE" value={64} color="#f59e0b" subtext="Weighted avg QS: 5.4" />
-          <ScoreCard label="WASTED SPEND" value={71} color="#fbbf24" subtext="17 wasteful terms flagged" />
-          <ScoreCard label="DEVICE STRATEGY" value={73} color="#fbbf24" subtext="Desktop undercapitalized" />
-          <ScoreCard label="AD SCHEDULE" value={75} color="#fbbf24" subtext="Overnight spend, low conv." />
-          <ScoreCard label="CONVERSION TRACKING" value={85} color={colors[2]} subtext="Firing, value attached" />
-          <ScoreCard label="OPTIMIZATION SCORE" value={98} color={colors[2]} subtext="Google-reported: 97.8%" />
+          <ScoreCard label="ORDER SHARE" value={55} color="#ef4444" subtext="Overall market capture" />
+          <ScoreCard label="CATEGORY MIX" value={62} color="#f59e0b" subtext="Top performing categories" />
+          <ScoreCard label="QUALITY SCORE" value={64} color="#f59e0b" subtext="Weighted avg performance: 8.4" />
+          <ScoreCard label="CANCELLATION RATE" value={71} color="#fbbf24" subtext="Tracked across all orders" />
+          <ScoreCard label="PLATFORM REACH" value={73} color="#fbbf24" subtext="Multi-channel presence" />
+          <ScoreCard label="DELIVERY TIME" value={75} color="#fbbf24" subtext="Average dispatch speed" />
+          <ScoreCard label="FULFILLMENT" value={85} color={colors[2]} subtext="Successful deliveries" />
+          <ScoreCard label="PLATFORM HEALTH" value={98} color={colors[2]} subtext="System-reported: 98.5%" />
         </div>
       </div>
 
@@ -952,10 +1034,10 @@ const DashboardOverview = ({ palette }) => {
       <div className="section-panel">
         <div className="section-header"><h2>Performance Pulse — 30-Day Trends</h2></div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
-          {['DAILY SPEND', 'DAILY CONVERSIONS', 'ROLLING CPA', 'ROLLING ROAS'].map((t, i) => (
+          {['DAILY REVENUE', 'DAILY ORDERS', 'AVERAGE OVD', 'FULFILLMENT RATE'].map((t, i) => (
             <div key={i} className="chart-item" style={{ padding: '1rem', border: '1px solid #f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6b7280', marginBottom: '5px' }}>{t}</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827' }}>{['$102 / day', '9.98 / day', '$10.20', '30.5x'][i]}</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827' }}>{['Rs. 1.2M', '98 / day', 'Rs. 10.2K', '94.5%'][i]}</div>
               <div style={{ height: 60 }}><Line key={palette.id} data={{ labels: trendData.map((_, j) => j), datasets: [{ data: trendData.map(d => i === 0 ? d.spend : i === 1 ? d.conv : i === 2 ? Math.random()*20 : d.roas), borderColor: colors[i], backgroundColor: `${colors[i]}11`, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false, grid: { display: false } }, y: { display: false, grid: { display: false } } } }} /></div>
             </div>
           ))}
@@ -1016,28 +1098,28 @@ const DashboardOverview = ({ palette }) => {
         
         <RecommendationCard 
           severity="CRITICAL" 
-          category="Impression Share · Auction" 
-          title="Search Impression Share lost to rank across 4 campaigns"
-          description="Four of five enabled campaigns are losing the majority of impression share to ad rank (not budget). Bids or QS are insufficient for the auction. Shopping (44%), Core Terms (59%), PMax (73%), Search Local (72%)."
-          action="Migrate Search to tROAS (start at 1500%). Rewrite ads in the two lowest-QS ad groups; consolidate near-duplicates."
-          uplift="Reach uplift: ~2x eligible search impressions if rank loss halved."
+          category="Fulfillment · Logistics" 
+          title="High Cancellation Rate in East Region Warehouses"
+          description="Three out of five regional warehouses are experiencing cancellation rates above 15% due to delayed dispatch times. Order volume (44%), Revenue Loss (59%), Delivery Delays (73%)."
+          action="Optimize last-mile delivery partnerships and increase local inventory limits for high-velocity products."
+          uplift="Revenue uplift: ~12% increase if cancellation rate halved."
           themeColors={colors}
         />
 
         <RecommendationCard 
           severity="CRITICAL" 
-          category="Structure · Brand Leak" 
-          title="Brand queries triggering ads inside competitor ad group"
-          description="Search term 'XXXX furniture XXXX' spent $22.36 / 0 conv in ad group 'Competitor A' while identical terms in properly-targeted ad groups return 3 conv at $9.60."
-          action="Add brand terms as exact-match negatives in non-brand ad groups; tighten competitor groups from broad to phrase; split brand into dedicated low-CPC campaign."
+          category="Product · Conversion Leak" 
+          title="Premium Products experiencing cart abandonment"
+          description="High-tier electronics are seeing a 65% cart abandonment rate while identical sub-categories in mid-tier return 3x higher conversion."
+          action="Introduce flexible payment options and optimize checkout flow for premium SKUs; retarget abandoned carts with dynamic offers."
           themeColors={colors}
         />
 
         <RecommendationCard 
           severity="STRENGTH" 
           category="Performance" 
-          title="Account ROAS: 30.5x • $93k conversion value on $3k spend"
-          description="Top decile of Google-reported account health. Strategic priority is scale, not repair."
+          title="Platform AOV: Rs. 12,000 • High Customer Retention"
+          description="Top decile of system-reported platform health. Strategic priority is scale, not repair."
           action="Strategic priority is scale, not repair."
           themeColors={colors}
         />
@@ -1045,27 +1127,27 @@ const DashboardOverview = ({ palette }) => {
 
       {/* Campaign Performance Summary */}
       <div className="section-panel" style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '1.5rem' }}><h2>Campaign Performance Summary</h2></div>
+        <div style={{ padding: '1.5rem' }}><h2>Warehouse Performance Summary</h2></div>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
           <thead style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb', color: '#6b7280', textAlign: 'left' }}>
             <tr>
-              <th style={{ padding: '12px 1.5rem' }}>CAMPAIGN</th>
+              <th style={{ padding: '12px 1.5rem' }}>WAREHOUSE</th>
               <th style={{ padding: '12px 1rem' }}>TYPE</th>
-              <th style={{ padding: '12px 1rem' }}>IMPR.</th>
-              <th style={{ padding: '12px 1rem' }}>CLICKS</th>
-              <th style={{ padding: '12px 1rem' }}>CTR</th>
-              <th style={{ padding: '12px 1rem' }}>AVG. CPC</th>
-              <th style={{ padding: '12px 1rem' }}>SPEND</th>
-              <th style={{ padding: '12px 1rem' }}>CONV.</th>
-              <th style={{ padding: '12px 1rem' }}>CPA</th>
-              <th style={{ padding: '12px 1.5rem' }}>ROAS</th>
+              <th style={{ padding: '12px 1rem' }}>TOTAL ORDERS</th>
+              <th style={{ padding: '12px 1rem' }}>DELIVERED</th>
+              <th style={{ padding: '12px 1rem' }}>FULFILLMENT</th>
+              <th style={{ padding: '12px 1rem' }}>AOV</th>
+              <th style={{ padding: '12px 1rem' }}>REVENUE</th>
+              <th style={{ padding: '12px 1rem' }}>CANCELLED</th>
+              <th style={{ padding: '12px 1rem' }}>CANCEL RATE</th>
+              <th style={{ padding: '12px 1.5rem' }}>STATUS</th>
             </tr>
           </thead>
           <tbody>
             {campaignPerformance.map((c, i) => (
               <tr key={i} style={{ borderBottom: i === campaignPerformance.length - 1 ? 'none' : '1px solid #f3f4f6' }}>
                 <td style={{ padding: '12px 1.5rem', fontWeight: 600 }}>{c.name}</td>
-                <td style={{ padding: '12px 1rem' }}><span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: c.type === 'SHOPPING' ? `${colors[2]}22` : c.type === 'SEARCH' ? `${colors[0]}22` : c.type === 'PMAX' ? `${colors[1]}22` : `${colors[4]}22`, color: c.type === 'SHOPPING' ? colors[2] : c.type === 'SEARCH' ? colors[0] : c.type === 'PMAX' ? colors[1] : colors[4] }}>{c.type}</span></td>
+                <td style={{ padding: '12px 1rem' }}><span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: `${colors[0]}22`, color: colors[0] }}>{c.type}</span></td>
                 <td style={{ padding: '12px 1rem' }}>{c.impr}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.clicks}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.ctr}</td>
@@ -1073,26 +1155,26 @@ const DashboardOverview = ({ palette }) => {
                 <td style={{ padding: '12px 1rem' }}>{c.spend}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.conv}</td>
                 <td style={{ padding: '12px 1rem' }}>{c.cpa}</td>
-                <td style={{ padding: '12px 1.5rem', fontWeight: 700, color: c.status === 'CRITICAL' ? '#ef4444' : c.status === 'STRENGTH' ? colors[2] : '#111827' }}>{c.roas}</td>
+                <td style={{ padding: '12px 1.5rem', fontWeight: 700, color: c.status === 'CRITICAL' ? '#ef4444' : c.status === 'STRENGTH' ? colors[2] : '#111827' }}>{c.status}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div style={{ padding: '12px 1.5rem', fontSize: '0.75rem', color: '#6b7280', background: '#f9fafb' }}>* PMax conversion value likely miscounted — see conversion-tracking finding.</div>
+        <div style={{ padding: '12px 1.5rem', fontSize: '0.75rem', color: '#6b7280', background: '#f9fafb' }}>* Warehouse data excludes internal transfers.</div>
       </div>
 
       {/* Ad Group Problem Matrix */}
       <div className="section-panel" style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '1.5rem' }}><h2>Ad Group Problem Matrix</h2></div>
+        <div style={{ padding: '1.5rem' }}><h2>Product Problem Matrix</h2></div>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
           <thead style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb', color: '#6b7280', textAlign: 'left' }}>
             <tr>
-              <th style={{ padding: '12px 1.5rem' }}>AD GROUP</th>
-              <th style={{ padding: '12px 1rem' }}>CAMPAIGN</th>
-              <th style={{ padding: '12px 1rem' }}>CLICKS</th>
-              <th style={{ padding: '12px 1rem' }}>SPEND</th>
-              <th style={{ padding: '12px 1rem' }}>CONV.</th>
-              <th style={{ padding: '12px 1rem' }}>ROAS</th>
+              <th style={{ padding: '12px 1.5rem' }}>PRODUCT</th>
+              <th style={{ padding: '12px 1rem' }}>CATEGORY</th>
+              <th style={{ padding: '12px 1rem' }}>SOLD</th>
+              <th style={{ padding: '12px 1rem' }}>REVENUE</th>
+              <th style={{ padding: '12px 1rem' }}>ORDERS</th>
+              <th style={{ padding: '12px 1rem' }}>AVG UNIT PRICE</th>
               <th style={{ padding: '12px 1.5rem' }}>FLAG</th>
             </tr>
           </thead>
@@ -1119,11 +1201,10 @@ const DashboardOverview = ({ palette }) => {
 
 const Sidebar = ({ activeTab, setActiveTab }) => (
   <div className="sidebar" style={{ width: '260px' }}>
-    <div className="sidebar-logo"><BarChart2 size={32} /> AUDIT.AI</div>
+    <div className="sidebar-logo"><BarChart2 size={32} /> PLATFORM.AI</div>
     <div className="menu-section">
       <div className="menu-label">Navigation</div>
-      <div className={`menu-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}><LayoutDashboard size={20} /> Dashboard</div>
-      <div className={`menu-item ${activeTab === 'table' ? 'active' : ''}`} onClick={() => setActiveTab('table')}><TableIcon size={20} /> Data View</div>
+      <div className={`menu-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}><LayoutDashboard size={20} /> Dashboard Overview</div>
       <div className={`menu-item ${activeTab === 'barchart' ? 'active' : ''}`} onClick={() => setActiveTab('barchart')}><BarChart2 size={20} /> Bar Chart</div>
       <div className={`menu-item ${activeTab === 'donutchart' ? 'active' : ''}`} onClick={() => setActiveTab('donutchart')}><PieIcon size={20} /> Donut Chart</div>
     </div>
@@ -1158,7 +1239,6 @@ const Dashboard = () => {
           </div>
         </header>
         {activeTab === 'overview' && <DashboardOverview palette={activePalette} />}
-        {activeTab === 'table' && <div className="section-panel"><h2>Data Table Content</h2></div>}
         {activeTab === 'barchart' && <BarChartsPage palette={activePalette} />}
         {activeTab === 'donutchart' && <DonutChartsPage palette={activePalette} />}
       </div>
