@@ -544,11 +544,11 @@ const ActivityCard = ({ colors }) => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
           {cards.map((card, i) => (
             <div key={i} style={{ background: '#f9fafb', padding: '1.5rem', borderRadius: '20px', border: '1px solid #f3f4f6' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
                 <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#111827' }}>{card.label}</span>
                 <span style={{ fontSize: '0.75rem', color: card.color, fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}><Clock size={14} /> {card.time}</span>
               </div>
-              <div style={{ fontSize: '0.8rem', color: '#9ca3af', marginBottom: '1.2rem' }}>{card.info}</div>
+              <div style={{ fontSize: '0.8rem', color: '#9ca3af', marginBottom: '0.8rem' }}>{card.info}</div>
               <div style={{ fontSize: '1.6rem', fontWeight: 800 }}>{card.value} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: '#9ca3af' }}>{card.unit}</span></div>
             </div>
           ))}
