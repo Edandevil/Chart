@@ -601,12 +601,12 @@ const ActivityCard = ({ colors }) => {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{topProducts[0]?.product_name?.substring(0, 10)} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Top</span></div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Best performing<br/>category overall</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{topProducts[0]?.total_quantity_sold || 0} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Units</span></div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Top product volume<br/>across all categories</div>
               </div>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{categoryLevel.length} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Levels</span></div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Active category<br/>distribution depth</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{categoryLevel[0]?.product_count || 0} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Products</span></div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Largest category<br/>by catalog size</div>
               </div>
             </div>
           </div>
