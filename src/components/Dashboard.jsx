@@ -913,8 +913,30 @@ const DashboardOverview = ({ palette }) => {
             <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '10px', textAlign: 'center' }}>Breakdown of preferred payment channels.</div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>PRICE VS VOLUME (SIZE = REVENUE)</h4>
-            <div style={{ height: 220 }}><Bubble key={palette.id} data={{ datasets: [{ label: 'Products', data: topProducts.slice(0, 10).map(p => ({ x: Number(p.avg_unit_price), y: Number(p.total_quantity_sold), r: Math.min(Number(p.total_revenue) / 100000, 30) + 5 })), backgroundColor: colors[1] + '80', borderColor: colors[1] }] }} options={{ maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Price (Rs.)', font: { size: 9 } }, grid: { display: false } }, y: { title: { display: true, text: 'Volume Sold', font: { size: 9 } }, grid: { display: false } } } }} /></div>
+            <h4>TOP PRODUCTS BY VOLUME</h4>
+            <div style={{ height: 220 }}>
+              <Bar 
+                key={palette.id} 
+                data={{ 
+                  labels: topProducts.slice(0, 6).map(p => p.product_name.substring(0, 15) + '...'), 
+                  datasets: [{ 
+                    label: 'Volume Sold', 
+                    data: topProducts.slice(0, 6).map(p => Number(p.total_quantity_sold)), 
+                    backgroundColor: colors[1],
+                    borderRadius: 4
+                  }] 
+                }} 
+                options={{ 
+                  indexAxis: 'y', 
+                  maintainAspectRatio: false, 
+                  plugins: { legend: { display: false } }, 
+                  scales: { 
+                    x: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }, 
+                    y: { grid: { display: false }, ticks: { font: { size: 10 } } } 
+                  } 
+                }} 
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -960,51 +982,25 @@ const DashboardOverview = ({ palette }) => {
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
-            <h4>CATEGORY PERFORMANCE (SIZE = WEIGHT)</h4>
+            <h4>PRODUCTS BY CATEGORY LEVEL</h4>
             <div style={{ height: 260 }}>
-              <Bubble 
-                key={palette.id}
+              <Bar 
+                key={palette.id} 
                 data={{ 
+                  labels: categoryLevel.slice(0, 6).map(c => `Level ${c.category_level}`), 
                   datasets: [{ 
-                    label: 'Categories', 
-                    data: categoryLevel.slice(0, 10).map(c => ({
-                      x: Number(c.category_level),
-                      y: Number(c.product_count),
-                      r: Math.min(Number(c.product_count) / 10, 40) + 10
-                    })), 
-                    backgroundColor: 'rgba(234, 88, 12, 0.5)', 
-                    borderColor: 'rgb(234, 88, 12)',
-                    borderWidth: 1
+                    label: 'Products', 
+                    data: categoryLevel.slice(0, 6).map(c => Number(c.product_count)), 
+                    backgroundColor: colors[2],
+                    borderRadius: 4
                   }] 
                 }} 
                 options={{ 
                   maintainAspectRatio: false, 
-                  plugins: { 
-                    legend: { 
-                      display: true, 
-                      position: 'top',
-                      align: 'center',
-                      labels: {
-                        boxWidth: 40,
-                        boxHeight: 15,
-                        padding: 20,
-                        font: { size: 12, weight: '500' },
-                        color: '#4b5563'
-                      }
-                    } 
-                  }, 
+                  plugins: { legend: { display: false } }, 
                   scales: { 
-                    x: { 
-                      title: { display: true, text: 'Category Level', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { top: 10 } },
-                      grid: { display: false },
-                      ticks: { font: { size: 11 } }
-                    }, 
-                    y: { 
-                      title: { display: true, text: 'Product Count', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { bottom: 10 } },
-                      grid: { color: '#f3f4f6' },
-                      beginAtZero: true,
-                      ticks: { font: { size: 11 } }
-                    } 
+                    x: { grid: { display: false }, ticks: { font: { size: 11 } } }, 
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 11 } }, beginAtZero: true } 
                   } 
                 }} 
               />
