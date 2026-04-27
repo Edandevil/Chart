@@ -13,7 +13,7 @@ import {
   Legend,
   Filler,
 } from 'chart.js';
-import { Line, Bar, Pie, Doughnut, Radar, Scatter, Bubble } from 'react-chartjs-2';
+import { Line, Bar, Pie, Doughnut, Radar, Scatter, Bubble, PolarArea } from 'react-chartjs-2';
 import { 
   LayoutDashboard, Table as TableIcon, PieChart as PieIcon, TrendingUp, 
   Settings, Download, RefreshCw, Pin, X, ChevronDown, 
@@ -619,6 +619,89 @@ const BarChartsPage = ({ palette }) => {
   );
 };
 
+const DonutChartsPage = ({ palette }) => {
+  const colors = palette.colors;
+
+  return (
+    <div className="container" style={{ minWidth: 0 }}>
+      <div className="section-panel" style={{ padding: '2rem' }}>
+        <div className="section-header"><h2>Distribution Analytics</h2></div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>FINDINGS BY SEVERITY (DONUT)</h4>
+            <div style={{ height: 280 }}>
+              <Doughnut 
+                data={{ 
+                  labels: ['Critical', 'High', 'Medium', 'Strength'], 
+                  datasets: [{ 
+                    data: [3, 4, 3, 2], 
+                    backgroundColor: ['#991b1b', '#d97706', '#fbbf24', colors[2]], 
+                    borderWidth: 3, 
+                    borderColor: '#ffffff', 
+                    cutout: '70%' 
+                  }] 
+                }} 
+                options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }} 
+              />
+            </div>
+          </div>
+          
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>MATCH TYPE MIX (PIE)</h4>
+            <div style={{ height: 280 }}>
+              <Pie 
+                data={{ 
+                  labels: ['Phrase', 'Broad', 'Exact'], 
+                  datasets: [{ 
+                    data: [45, 50, 5], 
+                    backgroundColor: [colors[0], colors[1], colors[2]], 
+                    borderWidth: 3, 
+                    borderColor: '#ffffff'
+                  }] 
+                }} 
+                options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }} 
+              />
+            </div>
+          </div>
+
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>DEVICE MIX (POLAR)</h4>
+            <div style={{ height: 280 }}>
+              <PolarArea 
+                data={{ 
+                  labels: ['Mobile', 'Desktop', 'Tablet', 'CTV'], 
+                  datasets: [{ 
+                    data: [70, 45, 30, 15], 
+                    backgroundColor: [
+                      `${colors[0]}88`, 
+                      `${colors[1]}88`, 
+                      `${colors[2]}88`, 
+                      `${colors[3]}88`
+                    ],
+                    borderColor: [colors[0], colors[1], colors[2], colors[3]],
+                    borderWidth: 1
+                  }] 
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+                  scales: {
+                    r: {
+                      ticks: { display: false },
+                      grid: { color: '#f3f4f6' }
+                    }
+                  }
+                }} 
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const DashboardOverview = ({ palette }) => {
   const colors = palette.colors;
 
@@ -744,6 +827,103 @@ const DashboardOverview = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>QS VS COST (SIZE = CONVERSIONS)</h4>
             <div style={{ height: 220 }}><Bubble data={{ datasets: [{ label: 'Ad Groups', data: [{ x: 3, y: 40, r: 8 }, { x: 5, y: 120, r: 25 }, { x: 6, y: 20, r: 12 }, { x: 8, y: 30, r: 15 }, { x: 10, y: 280, r: 35 }], backgroundColor: colors[1] + '80', borderColor: colors[1] }] }} options={{ maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Quality Score', font: { size: 9 } } }, y: { title: { display: true, text: 'Spend ($)', font: { size: 9 } } } } }} /></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Strategic Analytics */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Strategic Analytics</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>CONVERSION VALUE TREND</h4>
+            <div style={{ height: 260 }}>
+              <Line 
+                data={{ 
+                  labels: trendData.map(d => d.date), 
+                  datasets: [{ 
+                    label: 'Conv. Value', 
+                    data: trendData.map(d => d.spend * 15), 
+                    borderColor: colors[0], 
+                    backgroundColor: `${colors[0]}22`, 
+                    fill: true, 
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: colors[0]
+                  }] 
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  plugins: { legend: { display: false } },
+                  scales: { 
+                    y: { 
+                      beginAtZero: true,
+                      grid: { color: '#f3f4f6' },
+                      ticks: { font: { size: 10 } }
+                    },
+                    x: {
+                      grid: { display: false },
+                      ticks: { font: { size: 9 } }
+                    }
+                  }
+                }} 
+              />
+            </div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>QS VS COST (SIZE = CONVERSIONS)</h4>
+            <div style={{ height: 260 }}>
+              <Bubble 
+                data={{ 
+                  datasets: [{ 
+                    label: 'Ad Groups', 
+                    data: [
+                      { x: 3, y: 40, r: 12 }, 
+                      { x: 5, y: 120, r: 28 }, 
+                      { x: 6, y: 20, r: 15 }, 
+                      { x: 8, y: 30, r: 20 }, 
+                      { x: 10, y: 280, r: 40 }
+                    ], 
+                    backgroundColor: 'rgba(234, 88, 12, 0.5)', 
+                    borderColor: 'rgb(234, 88, 12)',
+                    borderWidth: 1
+                  }] 
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  plugins: { 
+                    legend: { 
+                      display: true, 
+                      position: 'top',
+                      align: 'center',
+                      labels: {
+                        boxWidth: 40,
+                        boxHeight: 15,
+                        padding: 20,
+                        font: { size: 12, weight: '500' },
+                        color: '#4b5563'
+                      }
+                    } 
+                  }, 
+                  scales: { 
+                    x: { 
+                      title: { display: true, text: 'Quality Score', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { top: 10 } },
+                      min: 2,
+                      max: 11,
+                      grid: { color: '#f3f4f6' },
+                      ticks: { font: { size: 11 } }
+                    }, 
+                    y: { 
+                      title: { display: true, text: 'Spend ($)', font: { size: 11, weight: '600' }, color: '#4b5563', padding: { bottom: 10 } },
+                      min: 0,
+                      max: 350,
+                      grid: { color: '#f3f4f6' },
+                      ticks: { font: { size: 11 } }
+                    } 
+                  } 
+                }} 
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -940,6 +1120,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => (
       <div className={`menu-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}><LayoutDashboard size={20} /> Dashboard</div>
       <div className={`menu-item ${activeTab === 'table' ? 'active' : ''}`} onClick={() => setActiveTab('table')}><TableIcon size={20} /> Data View</div>
       <div className={`menu-item ${activeTab === 'barchart' ? 'active' : ''}`} onClick={() => setActiveTab('barchart')}><BarChart2 size={20} /> Bar Chart</div>
+      <div className={`menu-item ${activeTab === 'donutchart' ? 'active' : ''}`} onClick={() => setActiveTab('donutchart')}><PieIcon size={20} /> Donut Chart</div>
     </div>
     <div style={{ marginTop: 'auto' }}><div className="menu-item"><Settings size={20} /> Settings</div></div>
   </div>
@@ -974,6 +1155,7 @@ const Dashboard = () => {
         {activeTab === 'overview' && <DashboardOverview palette={activePalette} />}
         {activeTab === 'table' && <div className="section-panel"><h2>Data Table Content</h2></div>}
         {activeTab === 'barchart' && <BarChartsPage palette={activePalette} />}
+        {activeTab === 'donutchart' && <DonutChartsPage palette={activePalette} />}
       </div>
     </div>
   );
