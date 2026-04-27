@@ -927,12 +927,11 @@ const DashboardOverview = ({ palette }) => {
                   }] 
                 }} 
                 options={{ 
-                  indexAxis: 'y', 
                   maintainAspectRatio: false, 
                   plugins: { legend: { display: false } }, 
                   scales: { 
-                    x: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }, 
-                    y: { grid: { display: false }, ticks: { font: { size: 10 } } } 
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
                   } 
                 }} 
               />
