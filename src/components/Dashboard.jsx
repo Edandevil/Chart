@@ -20,7 +20,7 @@ import {
   Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight,
   Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink,
   Wallet, Activity, Target, Heart, Footprints, Flame, Moon, Smile, Scale, Calendar, Droplets, Dumbbell,
-  Clock
+  Clock, LineChart
 } from 'lucide-react';
 
 // Register ChartJS components
@@ -57,6 +57,8 @@ const getQuery = (name) => queries.find(q => q.query_name === name)?.result || [
 const kpis = getQuery('Order Performance KPI Summary')[0] || {};
 const revenueGrowth = getQuery('Revenue Growth Monthly Comparison') || [];
 const orderTrends = getQuery('Daily Order Performance Trends') || [];
+const cartAbandonmentTrends = getQuery('Daily Cart Abandonment Trend') || [];
+const paymentConversionTrends = getQuery('Daily Payment Conversion Trend') || [];
 const warehouseShare = getQuery('Warehouse Market Share Distribution') || [];
 const warehouseSummary = getQuery('Warehouse Performance Summary') || [];
 const weeklyRevenue = getQuery('Weekly Revenue Pattern Analysis') || [];
@@ -129,7 +131,8 @@ const trendData = orderTrends.slice(0, 30).map(t => ({
   date: t.order_date.substring(5),
   spend: t.daily_revenue,
   conv: t.daily_orders,
-  roas: t.avg_order_value
+  roas: t.avg_order_value,
+  clicks: t.unique_customers
 }));
 
 const heatmapData = Array.from({ length: 7 }, () => Array.from({ length: 24 }, (_, hour) => {
@@ -1194,6 +1197,142 @@ const DashboardOverview = ({ palette }) => {
   );
 };
 
+const LineChartsPage = ({ palette }) => {
+  const colors = palette.colors;
+
+  return (
+    <div className="container" style={{ minWidth: 0 }}>
+      <div className="section-panel" style={{ padding: '2rem' }}>
+        <div className="section-header"><h2>Daily E-commerce Trends</h2></div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>DAILY REVENUE TREND</h4>
+            <div style={{ height: 260 }}>
+              <Line 
+                key={palette.id}
+                data={{ 
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
+                  datasets: [{ 
+                    label: 'Revenue (Rs.)', 
+                    data: trendData.slice(0, 14).reverse().map(d => d.spend), 
+                    borderColor: colors[0], 
+                    backgroundColor: `${colors[0]}22`, 
+                    fill: true, 
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: colors[0]
+                  }] 
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  plugins: { legend: { display: false } }, 
+                  scales: { 
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
+                  } 
+                }} 
+              />
+            </div>
+          </div>
+          
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>AVERAGE ORDER VALUE (AOV) TREND</h4>
+            <div style={{ height: 260 }}>
+              <Line 
+                key={palette.id}
+                data={{ 
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
+                  datasets: [{ 
+                    label: 'AOV (Rs.)', 
+                    data: trendData.slice(0, 14).reverse().map(d => d.roas), 
+                    borderColor: colors[1], 
+                    backgroundColor: `${colors[1]}22`, 
+                    fill: true, 
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: colors[1]
+                  }] 
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  plugins: { legend: { display: false } }, 
+                  scales: { 
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
+                  } 
+                }} 
+              />
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>DAILY ORDERS TREND</h4>
+            <div style={{ height: 260 }}>
+              <Line 
+                key={palette.id}
+                data={{ 
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
+                  datasets: [{ 
+                    label: 'Orders', 
+                    data: trendData.slice(0, 14).reverse().map(d => d.conv), 
+                    borderColor: '#ef4444', 
+                    backgroundColor: '#ef444422', 
+                    fill: true, 
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#ef4444'
+                  }] 
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  plugins: { legend: { display: false } }, 
+                  scales: { 
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
+                  } 
+                }} 
+              />
+            </div>
+          </div>
+
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>DAILY UNIQUE CUSTOMERS</h4>
+            <div style={{ height: 260 }}>
+              <Line 
+                key={palette.id}
+                data={{ 
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
+                  datasets: [{ 
+                    label: 'Customers', 
+                    data: trendData.slice(0, 14).reverse().map(d => d.clicks), 
+                    borderColor: colors[2], 
+                    backgroundColor: `${colors[2]}22`, 
+                    fill: true, 
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: colors[2]
+                  }] 
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  plugins: { legend: { display: false } }, 
+                  scales: { 
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
+                  } 
+                }} 
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Sidebar = ({ activeTab, setActiveTab }) => (
   <div className="sidebar" style={{ width: '260px' }}>
     <div className="sidebar-logo"><BarChart2 size={32} /> PLATFORM.AI</div>
@@ -1202,6 +1341,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => (
       <div className={`menu-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}><LayoutDashboard size={20} /> Dashboard Overview</div>
       <div className={`menu-item ${activeTab === 'barchart' ? 'active' : ''}`} onClick={() => setActiveTab('barchart')}><BarChart2 size={20} /> Bar Chart</div>
       <div className={`menu-item ${activeTab === 'donutchart' ? 'active' : ''}`} onClick={() => setActiveTab('donutchart')}><PieIcon size={20} /> Donut Chart</div>
+      <div className={`menu-item ${activeTab === 'linechart' ? 'active' : ''}`} onClick={() => setActiveTab('linechart')}><LineChart size={20} /> Line Chart</div>
     </div>
     <div style={{ marginTop: 'auto' }}><div className="menu-item"><Settings size={20} /> Settings</div></div>
   </div>
@@ -1236,6 +1376,7 @@ const Dashboard = () => {
         {activeTab === 'overview' && <DashboardOverview palette={activePalette} />}
         {activeTab === 'barchart' && <BarChartsPage palette={activePalette} />}
         {activeTab === 'donutchart' && <DonutChartsPage palette={activePalette} />}
+        {activeTab === 'linechart' && <LineChartsPage palette={activePalette} />}
       </div>
     </div>
   );
