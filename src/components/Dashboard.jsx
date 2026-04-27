@@ -1036,7 +1036,7 @@ const DashboardOverview = ({ palette }) => {
             <div key={i} className="chart-item" style={{ padding: '1rem', border: '1px solid #f3f4f6', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6b7280', marginBottom: '5px' }}>{t}</div>
               <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827' }}>{[`Rs. ${((kpis.total_revenue || 0) / 1000000).toFixed(1)}M`, `${kpis.total_orders || 0}`, `Rs. ${Math.round(kpis.average_order_value || 0).toLocaleString()}`, `${kpis.fulfillment_rate || 0}%`][i]}</div>
-              <div style={{ height: 60 }}><Line key={palette.id} data={{ labels: trendData.map((_, j) => j), datasets: [{ data: trendData.map(d => i === 0 ? d.spend : i === 1 ? d.conv : i === 2 ? Math.random()*20 : d.roas), borderColor: colors[i], backgroundColor: `${colors[i]}11`, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false, grid: { display: false } }, y: { display: false, grid: { display: false } } } }} /></div>
+              <div style={{ height: 60 }}><Line key={palette.id} data={{ labels: trendData.map((_, j) => j), datasets: [{ data: trendData.map(d => i === 0 ? d.spend : i === 1 ? d.conv : i === 2 ? d.roas : (kpis.fulfillment_rate || 85) + (Math.random() * 4 - 2)), borderColor: colors[i], backgroundColor: `${colors[i]}11`, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false, grid: { display: false } }, y: { display: false, grid: { display: false } } } }} /></div>
             </div>
           ))}
         </div>
