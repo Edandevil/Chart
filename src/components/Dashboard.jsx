@@ -601,12 +601,20 @@ const ActivityCard = ({ colors }) => {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{categoryLevel.reduce((sum, c) => sum + (c.product_count || 0), 0).toLocaleString()} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Products</span></div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Total active products<br/>across catalog</div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b' }} />
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Optimization</span>
+                </div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '6px', color: '#111827' }}>Simplify Navigation</div>
+                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>You have {categoryLevel.reduce((sum, c) => sum + (c.category_count || 0), 0).toLocaleString()} categories for {categoryLevel.reduce((sum, c) => sum + (c.product_count || 0), 0).toLocaleString()} products.<br/><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Consolidate low-density categories to reduce buyer friction.</strong></div>
               </div>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '8px' }}>{categoryLevel.reduce((sum, c) => sum + (c.category_count || 0), 0).toLocaleString()} <span style={{ fontSize: '0.8rem', fontWeight: 500, opacity: 0.6 }}>Categories</span></div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: '1.4' }}>Total sub-categories<br/>spanning {categoryLevel.length} levels</div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: colors[0] }} />
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: colors[0], textTransform: 'uppercase', letterSpacing: '0.05em' }}>Revenue Focus</span>
+                </div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '6px', color: '#111827' }}>Scale Top Performers</div>
+                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>Your top SKU alone drives Rs. {((topProducts[0]?.total_revenue || 0) / 1000000).toFixed(1)}M in revenue.<br/><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Reallocate ad budget to heavily promote proven top-sellers.</strong></div>
               </div>
             </div>
           </div>
