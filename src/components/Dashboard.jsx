@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import MarketingPage from './MarketingPage';
+import DriverPage from './DriverPage';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,13 +16,13 @@ import {
   Filler,
 } from 'chart.js';
 import { Line, Bar, Pie, Doughnut, Radar, Scatter, Bubble, PolarArea } from 'react-chartjs-2';
-import { 
-  LayoutDashboard, Table as TableIcon, PieChart as PieIcon, TrendingUp, 
-  Settings, Download, RefreshCw, Pin, X, ChevronDown, 
+import {
+  LayoutDashboard, Table as TableIcon, PieChart as PieIcon, TrendingUp,
+  Settings, Download, RefreshCw, Pin, X, ChevronDown,
   Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight,
   Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink,
   Wallet, Activity, Target, Heart, Footprints, Flame, Moon, Smile, Scale, Calendar, Droplets, Dumbbell,
-  Clock, LineChart
+  Clock, LineChart, Truck
 } from 'lucide-react';
 
 // Register ChartJS components
@@ -216,8 +218,8 @@ const ThemeSwitcher = ({ palettes, setPalettes, activePalette, setActivePalette 
 
   return (
     <div className="theme-switcher" ref={dropdownRef} style={{ position: 'relative' }}>
-      <button 
-        className="theme-btn" 
+      <button
+        className="theme-btn"
         onClick={() => setIsOpen(!isOpen)}
         style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 16px', borderRadius: '10px', border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
       >
@@ -237,7 +239,7 @@ const ThemeSwitcher = ({ palettes, setPalettes, activePalette, setActivePalette 
             {palettes.map(p => (
               <div key={p.id} style={{ marginBottom: '8px', padding: '8px', borderRadius: '8px', background: activePalette.id === p.id ? '#f9fafb' : 'transparent', border: activePalette.id === p.id ? '1px solid #e5e7eb' : '1px solid transparent' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: editingId === p.id ? '10px' : '0' }}>
-                  <div 
+                  <div
                     onClick={() => setActivePalette(p)}
                     style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
                   >
@@ -247,9 +249,9 @@ const ThemeSwitcher = ({ palettes, setPalettes, activePalette, setActivePalette 
                       ))}
                     </div>
                     {editingId === p.id ? (
-                      <input 
-                        type="text" 
-                        value={p.name} 
+                      <input
+                        type="text"
+                        value={p.name}
                         onChange={(e) => handleNameChange(p.id, e.target.value)}
                         style={{ width: '120px', fontSize: '0.8rem', border: '1px solid #ddd', borderRadius: '4px', padding: '2px 4px' }}
                       />
@@ -271,9 +273,9 @@ const ThemeSwitcher = ({ palettes, setPalettes, activePalette, setActivePalette 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '6px', paddingTop: '8px', borderTop: '1px solid #f3f4f6' }}>
                     {p.colors.map((c, i) => (
                       <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                        <input 
-                          type="color" 
-                          value={c} 
+                        <input
+                          type="color"
+                          value={c}
                           onChange={(e) => handleColorChange(p.id, i, e.target.value)}
                           style={{ width: '30px', height: '30px', border: 'none', padding: 0, cursor: 'pointer', borderRadius: '4px' }}
                         />
@@ -303,7 +305,7 @@ const ScoreCard = ({ label, value, color, subtext }) => (
 
 const Heatmap = ({ data, palette }) => {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  
+
   const getColor = (val) => {
     const opacity = Math.min(val / 15, 1);
     return `${palette.colors[0]}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`;
@@ -322,8 +324,8 @@ const Heatmap = ({ data, palette }) => {
           <React.Fragment key={day}>
             <div style={{ fontSize: '0.65rem', fontWeight: 600, color: '#4b5563', alignSelf: 'center' }}>{day}</div>
             {data[di].map((val, hi) => (
-              <div 
-                key={hi} 
+              <div
+                key={hi}
                 title={`${day} ${hi}:00 - ${val} conv`}
                 style={{ height: '20px', background: val > 0 ? getColor(val) : '#f3f4f6', borderRadius: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5rem', color: val > 8 ? 'white' : '#1f2937' }}
               >
@@ -606,7 +608,7 @@ const ActivityCard = ({ colors }) => {
                   <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Optimization</span>
                 </div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '6px', color: '#111827' }}>Simplify Navigation</div>
-                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>You have {categoryLevel.reduce((sum, c) => sum + (c.category_count || 0), 0).toLocaleString()} categories for {categoryLevel.reduce((sum, c) => sum + (c.product_count || 0), 0).toLocaleString()} products.<br/><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Consolidate low-density categories to reduce buyer friction.</strong></div>
+                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>You have {categoryLevel.reduce((sum, c) => sum + (c.category_count || 0), 0).toLocaleString()} categories for {categoryLevel.reduce((sum, c) => sum + (c.product_count || 0), 0).toLocaleString()} products.<br /><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Consolidate low-density categories to reduce buyer friction.</strong></div>
               </div>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
@@ -614,7 +616,7 @@ const ActivityCard = ({ colors }) => {
                   <span style={{ fontSize: '0.75rem', fontWeight: 700, color: colors[0], textTransform: 'uppercase', letterSpacing: '0.05em' }}>Revenue Focus</span>
                 </div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '6px', color: '#111827' }}>Scale Top Performers</div>
-                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>Your top SKU alone drives Rs. {((topProducts[0]?.total_revenue || 0) / 1000000).toFixed(1)}M in revenue.<br/><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Reallocate ad budget to heavily promote proven top-sellers.</strong></div>
+                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>Your top SKU alone drives Rs. {((topProducts[0]?.total_revenue || 0) / 1000000).toFixed(1)}M in revenue.<br /><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Reallocate ad budget to heavily promote proven top-sellers.</strong></div>
               </div>
             </div>
           </div>
@@ -640,42 +642,42 @@ const BarChartsPage = ({ palette }) => {
     <div className="container" style={{ minWidth: 0 }}>
       <div className="section-panel" style={{ padding: '2rem' }}>
         <div className="section-header"><h2>Revenue & Transaction Analysis</h2></div>
-        
+
         <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>WEEKLY REVENUE PATTERN</h4>
             <div style={{ height: 260 }}>
-              <Bar 
-                key={palette.id} 
-                data={{ 
-                  labels: weeklyRevenue.slice(0, 8).reverse().map(w => w.week_start ? w.week_start.substring(5) : ''), 
-                  datasets: [{ 
+              <Bar
+                key={palette.id}
+                data={{
+                  labels: weeklyRevenue.slice(0, 8).reverse().map(w => w.week_start ? w.week_start.substring(5) : ''),
+                  datasets: [{
                     label: 'Revenue (Rs.)',
-                    data: weeklyRevenue.slice(0, 8).reverse().map(w => w.weekly_revenue), 
-                    backgroundColor: colors[0], 
-                    borderRadius: 4 
-                  }] 
-                }} 
-                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} 
+                    data: weeklyRevenue.slice(0, 8).reverse().map(w => w.weekly_revenue),
+                    backgroundColor: colors[0],
+                    borderRadius: 4
+                  }]
+                }}
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }}
               />
             </div>
           </div>
-          
+
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>PAYMENT METHOD VOLUME</h4>
             <div style={{ height: 260 }}>
-              <Bar 
-                key={palette.id} 
-                data={{ 
-                  labels: transactionVolume.map(t => t.payment_method), 
-                  datasets: [{ 
+              <Bar
+                key={palette.id}
+                data={{
+                  labels: transactionVolume.map(t => t.payment_method),
+                  datasets: [{
                     label: 'Transactions',
-                    data: transactionVolume.map(t => t.transaction_count), 
-                    backgroundColor: colors[1], 
-                    borderRadius: 4 
-                  }] 
-                }} 
-                options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} 
+                    data: transactionVolume.map(t => t.transaction_count),
+                    backgroundColor: colors[1],
+                    borderRadius: 4
+                  }]
+                }}
+                options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }}
               />
             </div>
           </div>
@@ -685,39 +687,39 @@ const BarChartsPage = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>WAREHOUSE REVENUE</h4>
             <div style={{ height: 200 }}>
-              <Bar 
-                key={palette.id} 
-                data={{ 
-                  labels: warehouseShare.map(w => `WH ${w.warehouse_id}`), 
-                  datasets: [{ data: warehouseShare.map(w => w.revenue), backgroundColor: colors }] 
-                }} 
-                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }} 
+              <Bar
+                key={palette.id}
+                data={{
+                  labels: warehouseShare.map(w => `WH ${w.warehouse_id}`),
+                  datasets: [{ data: warehouseShare.map(w => w.revenue), backgroundColor: colors }]
+                }}
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }}
               />
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>TOP PRODUCTS (SOLD)</h4>
             <div style={{ height: 200 }}>
-              <Bar 
-                key={palette.id} 
-                data={{ 
-                  labels: topProducts.slice(0, 5).map(p => p.product_name.substring(0, 10) + '...'), 
-                  datasets: [{ label: 'Units Sold', data: topProducts.slice(0, 5).map(p => p.total_quantity_sold), backgroundColor: colors[2] }] 
-                }} 
-                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} 
+              <Bar
+                key={palette.id}
+                data={{
+                  labels: topProducts.slice(0, 5).map(p => p.product_name.substring(0, 10) + '...'),
+                  datasets: [{ label: 'Units Sold', data: topProducts.slice(0, 5).map(p => p.total_quantity_sold), backgroundColor: colors[2] }]
+                }}
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }}
               />
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>TOP CATEGORIES (PRODUCTS)</h4>
             <div style={{ height: 200 }}>
-              <Bar 
-                key={palette.id} 
-                data={{ 
-                  labels: categoryLevel.map(c => `Level ${c.category_level}`), 
-                  datasets: [{ label: 'Products', data: categoryLevel.map(c => c.product_count), backgroundColor: colors[3] }] 
-                }} 
-                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }} 
+              <Bar
+                key={palette.id}
+                data={{
+                  labels: categoryLevel.map(c => `Level ${c.category_level}`),
+                  datasets: [{ label: 'Products', data: categoryLevel.map(c => c.product_count), backgroundColor: colors[3] }]
+                }}
+                options={{ maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: true, grid: { display: false } } } }}
               />
             </div>
           </div>
@@ -734,43 +736,43 @@ const DonutChartsPage = ({ palette }) => {
     <div className="container" style={{ minWidth: 0 }}>
       <div className="section-panel" style={{ padding: '2rem' }}>
         <div className="section-header"><h2>Distribution Analytics</h2></div>
-        
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>ORDER STATUS (DONUT)</h4>
             <div style={{ height: 280 }}>
-              <Doughnut 
+              <Doughnut
                 key={palette.id}
-                data={{ 
-                  labels: orderStatus.map(o => o.order_status), 
-                  datasets: [{ 
-                    data: orderStatus.map(o => o.order_count), 
-                    backgroundColor: colors, 
-                    borderWidth: 3, 
-                    borderColor: '#ffffff', 
-                    cutout: '70%' 
-                  }] 
-                }} 
-                options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }} 
+                data={{
+                  labels: orderStatus.map(o => o.order_status),
+                  datasets: [{
+                    data: orderStatus.map(o => o.order_count),
+                    backgroundColor: colors,
+                    borderWidth: 3,
+                    borderColor: '#ffffff',
+                    cutout: '70%'
+                  }]
+                }}
+                options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }}
               />
             </div>
           </div>
-          
+
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>PAYMENT CHANNELS (PIE)</h4>
             <div style={{ height: 280 }}>
-              <Pie 
+              <Pie
                 key={palette.id}
-                data={{ 
-                  labels: paymentChannel.map(p => p.payment_method), 
-                  datasets: [{ 
-                    data: paymentChannel.map(p => p.transaction_count), 
-                    backgroundColor: colors, 
-                    borderWidth: 3, 
+                data={{
+                  labels: paymentChannel.map(p => p.payment_method),
+                  datasets: [{
+                    data: paymentChannel.map(p => p.transaction_count),
+                    backgroundColor: colors,
+                    borderWidth: 3,
                     borderColor: '#ffffff'
-                  }] 
-                }} 
-                options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }} 
+                  }]
+                }}
+                options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }}
               />
             </div>
           </div>
@@ -778,18 +780,18 @@ const DonutChartsPage = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CATEGORY LEVEL (POLAR)</h4>
             <div style={{ height: 280 }}>
-              <PolarArea 
+              <PolarArea
                 key={palette.id}
-                data={{ 
-                  labels: categoryLevel.map(c => `Level ${c.category_level}`), 
-                  datasets: [{ 
-                    data: categoryLevel.map(c => c.product_count), 
+                data={{
+                  labels: categoryLevel.map(c => `Level ${c.category_level}`),
+                  datasets: [{
+                    data: categoryLevel.map(c => c.product_count),
                     backgroundColor: colors.map(c => `${c}88`),
                     borderColor: colors,
                     borderWidth: 1
-                  }] 
-                }} 
-                options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, grid: { color: '#f3f4f6' } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }} 
+                  }]
+                }}
+                options={{ maintainAspectRatio: false, scales: { r: { ticks: { display: false }, grid: { color: '#f3f4f6' } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }}
               />
             </div>
           </div>
@@ -924,25 +926,25 @@ const DashboardOverview = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>TOP PRODUCTS BY VOLUME</h4>
             <div style={{ height: 220 }}>
-              <Bar 
-                key={palette.id} 
-                data={{ 
-                  labels: topProducts.slice(0, 6).map(p => p.product_name.substring(0, 15) + '...'), 
-                  datasets: [{ 
-                    label: 'Volume Sold', 
-                    data: topProducts.slice(0, 6).map(p => Number(p.total_quantity_sold)), 
+              <Bar
+                key={palette.id}
+                data={{
+                  labels: topProducts.slice(0, 6).map(p => p.product_name.substring(0, 15) + '...'),
+                  datasets: [{
+                    label: 'Volume Sold',
+                    data: topProducts.slice(0, 6).map(p => Number(p.total_quantity_sold)),
                     backgroundColor: colors[1],
                     borderRadius: 4
-                  }] 
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  plugins: { legend: { display: false } }, 
-                  scales: { 
-                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
-                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
-                  } 
-                }} 
+                  }]
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }
+                  }
+                }}
               />
             </div>
           </div>
@@ -956,26 +958,26 @@ const DashboardOverview = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>CONVERSION VALUE TREND</h4>
             <div style={{ height: 260 }}>
-              <Line 
+              <Line
                 key={palette.id}
-                data={{ 
-                  labels: trendData.map(d => d.date), 
-                  datasets: [{ 
-                    label: 'Daily Revenue', 
-                    data: trendData.map(d => d.spend), 
-                    borderColor: colors[0], 
-                    backgroundColor: `${colors[0]}22`, 
-                    fill: true, 
+                data={{
+                  labels: trendData.map(d => d.date),
+                  datasets: [{
+                    label: 'Daily Revenue',
+                    data: trendData.map(d => d.spend),
+                    borderColor: colors[0],
+                    backgroundColor: `${colors[0]}22`,
+                    fill: true,
                     tension: 0.4,
                     pointRadius: 3,
                     pointBackgroundColor: colors[0]
-                  }] 
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
+                  }]
+                }}
+                options={{
+                  maintainAspectRatio: false,
                   plugins: { legend: { display: false } },
-                  scales: { 
-                    y: { 
+                  scales: {
+                    y: {
                       beginAtZero: true,
                       grid: { display: false },
                       ticks: { font: { size: 10 } }
@@ -985,32 +987,32 @@ const DashboardOverview = ({ palette }) => {
                       ticks: { font: { size: 9 } }
                     }
                   }
-                }} 
+                }}
               />
             </div>
           </div>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>PRODUCTS BY CATEGORY LEVEL</h4>
             <div style={{ height: 260 }}>
-              <Bar 
-                key={palette.id} 
-                data={{ 
-                  labels: categoryLevel.slice(0, 6).map(c => `Level ${c.category_level}`), 
-                  datasets: [{ 
-                    label: 'Products', 
-                    data: categoryLevel.slice(0, 6).map(c => Number(c.product_count)), 
+              <Bar
+                key={palette.id}
+                data={{
+                  labels: categoryLevel.slice(0, 6).map(c => `Level ${c.category_level}`),
+                  datasets: [{
+                    label: 'Products',
+                    data: categoryLevel.slice(0, 6).map(c => Number(c.product_count)),
                     backgroundColor: colors[2],
                     borderRadius: 4
-                  }] 
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  plugins: { legend: { display: false } }, 
-                  scales: { 
-                    x: { grid: { display: false }, ticks: { font: { size: 11 } } }, 
-                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 11 } }, beginAtZero: true } 
-                  } 
-                }} 
+                  }]
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 11 } }, beginAtZero: true }
+                  }
+                }}
               />
             </div>
           </div>
@@ -1097,10 +1099,10 @@ const DashboardOverview = ({ palette }) => {
       <div className="section-panel">
         <div className="section-header"><h2>Findings & Recommendations</h2> <div style={{ display: 'flex', gap: '8px' }}><span style={{ background: '#fee2e2', color: '#b91c1c', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Critical</span> <span style={{ background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>4 High</span> <span style={{ background: `${colors[2]}22`, color: colors[2], padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem' }}>3 Medium</span></div></div>
         <p style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>Ordered by severity and financial impact.</p>
-        
-        <RecommendationCard 
-          severity="CRITICAL" 
-          category="Fulfillment · Logistics" 
+
+        <RecommendationCard
+          severity="CRITICAL"
+          category="Fulfillment · Logistics"
           title="High Cancellation Rate in East Region Warehouses"
           description="Three out of five regional warehouses are experiencing cancellation rates above 15% due to delayed dispatch times. Order volume (44%), Revenue Loss (59%), Delivery Delays (73%)."
           action="Optimize last-mile delivery partnerships and increase local inventory limits for high-velocity products."
@@ -1108,18 +1110,18 @@ const DashboardOverview = ({ palette }) => {
           themeColors={colors}
         />
 
-        <RecommendationCard 
-          severity="CRITICAL" 
-          category="Product · Conversion Leak" 
+        <RecommendationCard
+          severity="CRITICAL"
+          category="Product · Conversion Leak"
           title="Premium Products experiencing cart abandonment"
           description="High-tier electronics are seeing a 65% cart abandonment rate while identical sub-categories in mid-tier return 3x higher conversion."
           action="Introduce flexible payment options and optimize checkout flow for premium SKUs; retarget abandoned carts with dynamic offers."
           themeColors={colors}
         />
 
-        <RecommendationCard 
-          severity="STRENGTH" 
-          category="Performance" 
+        <RecommendationCard
+          severity="STRENGTH"
+          category="Performance"
           title="Platform AOV: Rs. 12,000 • High Customer Retention"
           description="Top decile of system-reported platform health. Strategic priority is scale, not repair."
           action="Strategic priority is scale, not repair."
@@ -1208,64 +1210,64 @@ const LineChartsPage = ({ palette }) => {
     <div className="container" style={{ minWidth: 0 }}>
       <div className="section-panel" style={{ padding: '2rem' }}>
         <div className="section-header"><h2>Daily E-commerce Trends</h2></div>
-        
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem', minWidth: 0 }}>
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>DAILY REVENUE TREND</h4>
             <div style={{ height: 260 }}>
-              <Line 
+              <Line
                 key={palette.id}
-                data={{ 
-                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
-                  datasets: [{ 
-                    label: 'Revenue (Rs.)', 
-                    data: trendData.slice(0, 14).reverse().map(d => d.spend), 
-                    borderColor: colors[0], 
-                    backgroundColor: `${colors[0]}22`, 
-                    fill: true, 
+                data={{
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date),
+                  datasets: [{
+                    label: 'Revenue (Rs.)',
+                    data: trendData.slice(0, 14).reverse().map(d => d.spend),
+                    borderColor: colors[0],
+                    backgroundColor: `${colors[0]}22`,
+                    fill: true,
                     tension: 0.4,
                     pointRadius: 3,
                     pointBackgroundColor: colors[0]
-                  }] 
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  plugins: { legend: { display: false } }, 
-                  scales: { 
-                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
-                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
-                  } 
-                }} 
+                  }]
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }
+                  }
+                }}
               />
             </div>
           </div>
-          
+
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>AVERAGE ORDER VALUE (AOV) TREND</h4>
             <div style={{ height: 260 }}>
-              <Line 
+              <Line
                 key={palette.id}
-                data={{ 
-                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
-                  datasets: [{ 
-                    label: 'AOV (Rs.)', 
-                    data: trendData.slice(0, 14).reverse().map(d => d.roas), 
-                    borderColor: colors[1], 
-                    backgroundColor: `${colors[1]}22`, 
-                    fill: true, 
+                data={{
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date),
+                  datasets: [{
+                    label: 'AOV (Rs.)',
+                    data: trendData.slice(0, 14).reverse().map(d => d.roas),
+                    borderColor: colors[1],
+                    backgroundColor: `${colors[1]}22`,
+                    fill: true,
                     tension: 0.4,
                     pointRadius: 3,
                     pointBackgroundColor: colors[1]
-                  }] 
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  plugins: { legend: { display: false } }, 
-                  scales: { 
-                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
-                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
-                  } 
-                }} 
+                  }]
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }
+                  }
+                }}
               />
             </div>
           </div>
@@ -1275,29 +1277,29 @@ const LineChartsPage = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>DAILY ORDERS TREND</h4>
             <div style={{ height: 260 }}>
-              <Line 
+              <Line
                 key={palette.id}
-                data={{ 
-                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
-                  datasets: [{ 
-                    label: 'Orders', 
-                    data: trendData.slice(0, 14).reverse().map(d => d.conv), 
-                    borderColor: '#ef4444', 
-                    backgroundColor: '#ef444422', 
-                    fill: true, 
+                data={{
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date),
+                  datasets: [{
+                    label: 'Orders',
+                    data: trendData.slice(0, 14).reverse().map(d => d.conv),
+                    borderColor: '#ef4444',
+                    backgroundColor: '#ef444422',
+                    fill: true,
                     tension: 0.4,
                     pointRadius: 3,
                     pointBackgroundColor: '#ef4444'
-                  }] 
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  plugins: { legend: { display: false } }, 
-                  scales: { 
-                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
-                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
-                  } 
-                }} 
+                  }]
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }
+                  }
+                }}
               />
             </div>
           </div>
@@ -1305,33 +1307,257 @@ const LineChartsPage = ({ palette }) => {
           <div className="chart-item" style={{ minWidth: 0 }}>
             <h4>DAILY UNIQUE CUSTOMERS</h4>
             <div style={{ height: 260 }}>
-              <Line 
+              <Line
                 key={palette.id}
-                data={{ 
-                  labels: trendData.slice(0, 14).reverse().map(d => d.date), 
-                  datasets: [{ 
-                    label: 'Customers', 
-                    data: trendData.slice(0, 14).reverse().map(d => d.clicks), 
-                    borderColor: colors[2], 
-                    backgroundColor: `${colors[2]}22`, 
-                    fill: true, 
+                data={{
+                  labels: trendData.slice(0, 14).reverse().map(d => d.date),
+                  datasets: [{
+                    label: 'Customers',
+                    data: trendData.slice(0, 14).reverse().map(d => d.clicks),
+                    borderColor: colors[2],
+                    backgroundColor: `${colors[2]}22`,
+                    fill: true,
                     tension: 0.4,
                     pointRadius: 3,
                     pointBackgroundColor: colors[2]
-                  }] 
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  plugins: { legend: { display: false } }, 
-                  scales: { 
-                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }, 
-                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } } 
-                  } 
-                }} 
+                  }]
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: { grid: { color: '#f3f4f6' }, ticks: { font: { size: 10 } } }
+                  }
+                }}
               />
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const DataStructurePage = ({ palette }) => {
+  const colors = palette.colors;
+
+  const placeholderStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
+    color: '#9ca3af',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    textAlign: 'center',
+    padding: '1rem'
+  };
+
+  return (
+    <div className="container" style={{ minWidth: 0 }}>
+      {/* Banner */}
+      <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, borderRadius: '16px', padding: '2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Platform Performance Dashboard <span style={{ fontSize: '0.7rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>LIVE</span></h2>
+          <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Data Source: <b>Production Database</b> • Environment: <b>Main</b> • Window: <b>Last 30 days</b></div>
+          <div style={{ fontSize: '0.85rem', opacity: 0.9, marginTop: '5px' }}>Total Orders: <b>[KPI Summary]</b> • Revenue: <b>[KPI Summary]</b> • Fulfillment: <b>[KPI Summary]</b></div>
+        </div>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '50%', border: `4px solid ${colors[2]}`, width: '110px', height: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>[%]</div>
+            <div style={{ fontSize: '0.5rem', fontWeight: 700 }}>FULFILLMENT %</div>
+          </div>
+          <div style={{ fontSize: '0.7rem' }}>
+            <div style={{ color: '#ef4444' }}>● 3 Critical Alerts</div>
+            <div style={{ color: '#f59e0b' }}>● 4 High Priority</div>
+            <div style={{ color: '#fbbf24' }}>● 3 Medium</div>
+            <div style={{ color: colors[2] }}>● 2 Strengths</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Finance Cards Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
+        {/* Placeholder for CostAnalysisCard */}
+        <div className="section-panel" style={{ height: '340px', padding: '1.5rem', marginBottom: 0 }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '5px' }}>Revenue Analysis</h3>
+          <div style={placeholderStyle}>Requires: Order Performance KPI Summary</div>
+        </div>
+        {/* Placeholder for FinancialHealthCard */}
+        <div className="section-panel" style={{ height: '340px', padding: '1.5rem', marginBottom: 0 }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '5px' }}>Order Performance</h3>
+          <div style={placeholderStyle}>Requires: Weekly Revenue Pattern Analysis</div>
+        </div>
+        {/* Placeholder for GoalTrackerCard */}
+        <div className="section-panel" style={{ height: '340px', padding: '1.5rem', marginBottom: 0 }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '5px' }}>Platform Goals</h3>
+          <div style={placeholderStyle}>Requires: Revenue Growth Monthly Comparison</div>
+        </div>
+      </div>
+
+      {/* Opportunities */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
+        {['Cancelled orders impact', 'Underperforming categories', 'Growth opportunities'].map((t, i) => (
+          <div key={i} className="section-panel" style={{ padding: '1.5rem', marginBottom: 0, height: '140px' }}>
+            <span style={{ fontSize: '0.6rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: i === 0 ? '#fee2e2' : i === 1 ? '#fef3c7' : `${colors[4]}22`, color: i === 0 ? '#991b1b' : i === 1 ? '#92400e' : colors[4] }}>{['IMMEDIATE', 'NEAR-TERM', 'STRATEGIC'][i]}</span>
+            <h3 style={{ fontSize: '0.9rem', margin: '10px 0 5px' }}>{t}</h3>
+            <div style={{ ...placeholderStyle, padding: '0', justifyContent: 'flex-start' }}>Requires: KPI Summary</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Health Tracker Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: '20px', marginBottom: '20px', minWidth: 0, alignItems: 'start' }}>
+        <div className="section-panel" style={{ height: '420px', marginBottom: 0 }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem' }}>Vital Stats</h2>
+          <div style={placeholderStyle}>Requires: Health Tracker Metrics Data</div>
+        </div>
+        <div className="section-panel" style={{ height: '420px', marginBottom: 0 }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem' }}>System Activity</h2>
+          <div style={placeholderStyle}>Requires: Daily Order Performance Trends Data</div>
+        </div>
+      </div>
+
+      {/* Audit Overview */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Platform Overview</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.5fr', gap: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>PLATFORM HEALTH RADAR</h4>
+            <div style={{ height: 260 }}><div style={placeholderStyle}>Requires: Order Performance KPI Summary</div></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>ORDER STATUS DISTRIBUTION</h4>
+            <div style={{ height: 220, marginTop: '20px' }}><div style={placeholderStyle}>Requires: Order Status Distribution Breakdown</div></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>CATEGORY PERFORMANCE SCORE</h4>
+            <div style={{ height: 260 }}><div style={placeholderStyle}>Requires: Top Products Performance Analysis</div></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Market Share Diagnosis */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Market Share Diagnosis</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '3rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4 style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '20px' }}>Stacked: captured / lost-to-logistics / lost-to-competition</h4>
+            <div style={{ height: 280 }}><div style={placeholderStyle}>Requires: Warehouse Market Share Distribution</div></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>IS COMPOSITION RADAR</h4>
+            <div style={{ height: 280 }}><div style={placeholderStyle}>Requires: Warehouse Market Share Distribution</div></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Category Analytics */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Category Analytics</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.2fr', gap: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>CATEGORY PERFORMANCE DISTRIBUTION</h4>
+            <div style={{ height: 220 }}><div style={placeholderStyle}>Requires: Category Distribution - Level-wise Breakdown</div></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>PAYMENT CHANNEL MIX</h4>
+            <div style={{ height: 220 }}><div style={placeholderStyle}>Requires: Payment Channel Performance Breakdown</div></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>TOP PRODUCTS BY VOLUME</h4>
+            <div style={{ height: 220 }}><div style={placeholderStyle}>Requires: Top Products Performance Analysis</div></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Strategic Analytics */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Strategic Analytics</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>CONVERSION VALUE TREND</h4>
+            <div style={{ height: 260 }}><div style={placeholderStyle}>Requires: Daily Order Performance Trends</div></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4>PRODUCTS BY CATEGORY LEVEL</h4>
+            <div style={{ height: 260 }}><div style={placeholderStyle}>Requires: Category Distribution - Level-wise Breakdown</div></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Audit Scorecard */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Platform Scorecard</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', minWidth: 0 }}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="score-card" style={{ height: '110px' }}><div style={placeholderStyle}>[ScoreCard Value]</div></div>
+          ))}
+        </div>
+      </div>
+
+      {/* Performance Pulse */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Performance Pulse — 30-Day Trends</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem', minWidth: 0 }}>
+          {['TOTAL REVENUE', 'TOTAL ORDERS', 'AVERAGE AOV', 'FULFILLMENT RATE'].map((t, i) => (
+            <div key={i} className="chart-item" style={{ padding: '1rem', border: '1px solid #f3f4f6', borderRadius: '12px', height: '140px' }}>
+              <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6b7280', marginBottom: '5px' }}>{t}</div>
+              <div style={{ height: 80, marginTop: '10px' }}><div style={placeholderStyle}>[Trend Sparkline]</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Platform Trends & Distribution */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Platform Trends & Distribution</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem', minWidth: 0 }}>
+          {['WAREHOUSE MIX', 'ORDERS BY CATEGORY', 'HOURLY TRAFFIC', 'ORDERS BY DAY'].map((t, i) => (
+            <div key={i} className="chart-item" style={{ minWidth: 0 }}>
+              <h4>{t}</h4>
+              <div style={{ height: 180 }}><div style={placeholderStyle}>[Chart Data]</div></div>
+            </div>
+          ))}
+        </div>
+        <h4>ORDER TREND HEATMAP — DAY × HOUR</h4>
+        <div style={{ marginTop: '20px', height: '200px' }}>
+          <div style={placeholderStyle}>Requires: Heatmap Data Array</div>
+        </div>
+      </div>
+
+      {/* Category vs Payment Pareto */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Category vs Payment Distribution Pareto</h2></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', minWidth: 0 }}>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4 style={{ color: colors[0], marginBottom: '15px' }}>CATEGORY DISTRIBUTION PARETO</h4>
+            <div style={{ height: 320 }}><div style={placeholderStyle}>Requires: Category Distribution Data</div></div>
+          </div>
+          <div className="chart-item" style={{ minWidth: 0 }}>
+            <h4 style={{ color: colors[2], marginBottom: '15px' }}>PAYMENT CHANNEL PARETO</h4>
+            <div style={{ height: 320 }}><div style={placeholderStyle}>Requires: Payment Channel Data</div></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Findings & Recommendations */}
+      <div className="section-panel">
+        <div className="section-header"><h2>Findings & Recommendations</h2></div>
+        <div style={{ height: '400px' }}><div style={placeholderStyle}>Requires: Insights / Recommendations Array</div></div>
+      </div>
+
+      {/* Tables */}
+      <div className="section-panel" style={{ padding: '1.5rem', overflow: 'hidden' }}>
+        <h2>Warehouse Performance Summary</h2>
+        <div style={{ height: '300px', marginTop: '1rem' }}><div style={placeholderStyle}>Requires: Warehouse Performance Summary Array</div></div>
+      </div>
+
+      <div className="section-panel" style={{ padding: '1.5rem', overflow: 'hidden' }}>
+        <h2>Product Problem Matrix</h2>
+        <div style={{ height: '300px', marginTop: '1rem' }}><div style={placeholderStyle}>Requires: Top Products Performance Analysis Array</div></div>
       </div>
     </div>
   );
@@ -1346,6 +1572,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => (
       <div className={`menu-item ${activeTab === 'barchart' ? 'active' : ''}`} onClick={() => setActiveTab('barchart')}><BarChart2 size={20} /> Bar Chart</div>
       <div className={`menu-item ${activeTab === 'donutchart' ? 'active' : ''}`} onClick={() => setActiveTab('donutchart')}><PieIcon size={20} /> Donut Chart</div>
       <div className={`menu-item ${activeTab === 'linechart' ? 'active' : ''}`} onClick={() => setActiveTab('linechart')}><LineChart size={20} /> Line Chart</div>
+      <div className={`menu-item ${activeTab === 'datastructure' ? 'active' : ''}`} onClick={() => setActiveTab('datastructure')}><TableIcon size={20} /> Data Structure</div>
+      <div className={`menu-item ${activeTab === 'marketing' ? 'active' : ''}`} onClick={() => setActiveTab('marketing')}><TrendingUp size={20} /> Marketing</div>
+      <div className={`menu-item ${activeTab === 'driver' ? 'active' : ''}`} onClick={() => setActiveTab('driver')}><Truck size={20} /> Driver</div>
     </div>
     <div style={{ marginTop: 'auto' }}><div className="menu-item"><Settings size={20} /> Settings</div></div>
   </div>
@@ -1381,6 +1610,9 @@ const Dashboard = () => {
         {activeTab === 'barchart' && <BarChartsPage palette={activePalette} />}
         {activeTab === 'donutchart' && <DonutChartsPage palette={activePalette} />}
         {activeTab === 'linechart' && <LineChartsPage palette={activePalette} />}
+        {activeTab === 'datastructure' && <DataStructurePage palette={activePalette} />}
+        {activeTab === 'marketing' && <MarketingPage palette={activePalette} />}
+        {activeTab === 'driver' && <DriverPage palette={activePalette} />}
       </div>
     </div>
   );
