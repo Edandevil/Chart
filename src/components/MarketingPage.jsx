@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import { mkt } from '../marketingData';
+import AnalyticsBanner from './AnalyticsBanner';
 import { TrendingUp, TrendingDown, Users, Gift, ShoppingCart, CreditCard, MapPin, Star } from 'lucide-react';
 
 const KPICard = ({ label, value, sub, color, icon }) => (
@@ -18,29 +19,34 @@ const MarketingPage = ({ palette }) => {
   const colors = palette.colors;
   const chartOpts = (horizontal) => ({ maintainAspectRatio: false, plugins: { legend: { display: false } }, indexAxis: horizontal ? 'y' : 'x', scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } });
 
+  const healthLegend = [
+    { label: 'High Success', value: 8, color: '#10b981' },
+    { label: 'Active Loyalty', value: 4, color: '#fbbf24' },
+    { label: 'Abandoned Carts', value: 3, color: '#f97316' },
+    { label: 'Failed Txns', value: 1, color: '#ef4444' }
+  ];
+
+  const metrics = [
+    { label: 'Total Customers', value: mkt.customerHealth.total_customers.toLocaleString() },
+    { label: 'Campaign Inventory', value: (mkt.campaigns[0].total_count + mkt.campaigns[1].total_count).toLocaleString() },
+    { label: 'Loyalty Rate', value: `${mkt.customerHealth.loyalty_participation_rate}%` },
+    { label: 'Payment Success', value: `${mkt.paymentOverall.success_rate_pct}%` },
+    { label: 'Lost Cart Value', value: `Rs. ${(mkt.cartAbandonment.abandoned_cart_value/1000000).toFixed(1)}M` }
+  ];
+
   return (
     <div className="container" style={{ minWidth: 0 }}>
 
       {/* Banner */}
-      <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, borderRadius: '16px', padding: '2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Marketing Dashboard <span style={{ fontSize: '0.7rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>LAST WEEK</span></h2>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Period: <b>2026-04-13 to 2026-04-19</b> • Customers: <b>{mkt.customerHealth.total_customers.toLocaleString()}</b> • Loyalty: <b>{mkt.customerHealth.loyalty_participation_rate}%</b></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9, marginTop: '5px' }}>Total Transactions: <b>{mkt.paymentOverall.total_transactions.toLocaleString()}</b> • Success Rate: <b>{mkt.paymentOverall.success_rate_pct}%</b> • Cart Abandonment: <b>{mkt.cartAbandonment.abandonment_rate_pct}%</b></div>
-        </div>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '50%', border: `4px solid ${colors[2]}`, width: '110px', height: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{mkt.paymentOverall.success_rate_pct}%</div>
-            <div style={{ fontSize: '0.5rem', fontWeight: 700 }}>PAYMENT SUCCESS</div>
-          </div>
-          <div style={{ fontSize: '0.75rem' }}>
-            <div style={{ color: '#ef4444', marginBottom: 4 }}>● Cart Abandon: {mkt.cartAbandonment.abandonment_rate_pct}%</div>
-            <div style={{ color: '#f59e0b', marginBottom: 4 }}>● Coupon Redemptions: {mkt.campaigns[0].total_redemptions}</div>
-            <div style={{ color: colors[2], marginBottom: 4 }}>● Loyalty Rate: {mkt.customerHealth.loyalty_participation_rate}%</div>
-            <div style={{ color: 'rgba(255,255,255,0.8)' }}>● Active Offers: {mkt.campaigns[1].active_count}</div>
-          </div>
-        </div>
-      </div>
+      <AnalyticsBanner 
+        title="Marketing Dashboard"
+        subtitle1="Month-to-Date Performance · April 2026"
+        subtitle2="Period: 2026-04-13 to 2026-04-19 · Region: Global"
+        metrics={metrics}
+        healthScore={84}
+        healthLegend={healthLegend}
+        colors={colors}
+      />
 
       {/* KPI Cards Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>

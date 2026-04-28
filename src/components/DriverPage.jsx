@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bar, Doughnut, Line, Radar } from 'react-chartjs-2';
 import { drv } from '../driverData';
+import AnalyticsBanner from './AnalyticsBanner';
 import { Truck, Users, CheckCircle2, Activity, MapPin, AlertTriangle, TrendingUp, Award } from 'lucide-react';
 
 const KPICard = ({ label, value, sub, color, icon }) => (
@@ -20,29 +21,34 @@ const DriverPage = ({ palette }) => {
   const peakHour = drv.hourlyActivity.reduce((a, b) => a.pings > b.pings ? a : b);
   const totalPings = drv.dailyTrend.reduce((s, d) => s + d.pings, 0);
 
+  const healthLegend = [
+    { label: 'Verified', value: drv.workforce.verified_drivers, color: '#10b981' },
+    { label: 'Active', value: drv.workforce.active_drivers, color: '#fbbf24' },
+    { label: 'Alerts', value: drv.workloadAlerts.length, color: '#f97316' },
+    { label: 'Warehouses', value: drv.byWarehouse.length, color: colors[0] }
+  ];
+
+  const metrics = [
+    { label: 'Total Drivers', value: drv.workforce.total_drivers },
+    { label: 'Active Drivers', value: drv.workforce.active_drivers },
+    { label: 'Total Deliveries', value: drv.workforce.total_deliveries.toLocaleString() },
+    { label: 'Verification Rate', value: `${drv.workforce.verification_rate_pct}%` },
+    { label: 'Peak Hour', value: `${peakHour.hour}:00` }
+  ];
+
   return (
     <div className="container" style={{ minWidth: 0 }}>
 
       {/* Banner */}
-      <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[2]} 100%)`, borderRadius: '16px', padding: '2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Driver Operations Dashboard <span style={{ fontSize: '0.7rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>LAST WEEK</span></h2>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Period: <b>2026-04-13 to 2026-04-19</b> • Total Drivers: <b>{drv.workforce.total_drivers}</b> • Verification: <b>{drv.workforce.verification_rate_pct}%</b></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9, marginTop: '5px' }}>Total Deliveries: <b>{drv.workforce.total_deliveries.toLocaleString()}</b> • Total Pings: <b>{totalPings.toLocaleString()}</b> • Peak Hour: <b>{peakHour.hour}:00 ({peakHour.pings.toLocaleString()} pings)</b></div>
-        </div>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '50%', border: `4px solid ${colors[3]}`, width: '110px', height: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{drv.workforce.active_drivers}</div>
-            <div style={{ fontSize: '0.5rem', fontWeight: 700 }}>ACTIVE DRIVERS</div>
-          </div>
-          <div style={{ fontSize: '0.75rem' }}>
-            <div style={{ color: colors[3], marginBottom: 4 }}>● Verified: {drv.workforce.verified_drivers}/{drv.workforce.total_drivers}</div>
-            <div style={{ color: '#fbbf24', marginBottom: 4 }}>● Avg Deliveries/Driver: {drv.workforce.avg_deliveries_per_active_driver.toLocaleString()}</div>
-            <div style={{ color: 'rgba(255,255,255,0.8)', marginBottom: 4 }}>● Overloaded: {drv.workloadAlerts.length} driver(s)</div>
-            <div style={{ color: 'rgba(255,255,255,0.6)' }}>● Warehouses: {drv.byWarehouse.length}</div>
-          </div>
-        </div>
-      </div>
+      <AnalyticsBanner 
+        title="Driver Operations Dashboard"
+        subtitle1="Month-to-Date Operations · April 2026"
+        subtitle2="Period: 2026-04-13 to 2026-04-19 · Fleet Status: Healthy"
+        metrics={metrics}
+        healthScore={92}
+        healthLegend={healthLegend}
+        colors={colors}
+      />
 
       {/* KPI Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>

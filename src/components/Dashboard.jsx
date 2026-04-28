@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import MarketingPage from './MarketingPage';
 import DriverPage from './DriverPage';
+import SalesPage from './SalesPage';
+import AnalyticsBanner from './AnalyticsBanner';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,7 +24,7 @@ import {
   Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight,
   Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink,
   Wallet, Activity, Target, Heart, Footprints, Flame, Moon, Smile, Scale, Calendar, Droplets, Dumbbell,
-  Clock, LineChart, Truck
+  Clock, LineChart, Truck, ShoppingCart
 } from 'lucide-react';
 
 // Register ChartJS components
@@ -608,7 +610,7 @@ const ActivityCard = ({ colors }) => {
                   <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Optimization</span>
                 </div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '6px', color: '#111827' }}>Simplify Navigation</div>
-                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>You have {categoryLevel.reduce((sum, c) => sum + (c.category_count || 0), 0).toLocaleString()} categories for {categoryLevel.reduce((sum, c) => sum + (c.product_count || 0), 0).toLocaleString()} products.<br /><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Consolidate low-density categories to reduce buyer friction.</strong></div>
+                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>{categoryLevel.reduce((sum, c) => sum + (c.category_count || 0), 0).toLocaleString()} categories for {categoryLevel.reduce((sum, c) => sum + (c.product_count || 0), 0).toLocaleString()} products.</div>
               </div>
               <div style={{ background: '#f9fafb', padding: '1.2rem', borderRadius: '16px', border: '1px solid #f3f4f6' }}>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
@@ -616,7 +618,7 @@ const ActivityCard = ({ colors }) => {
                   <span style={{ fontSize: '0.75rem', fontWeight: 700, color: colors[0], textTransform: 'uppercase', letterSpacing: '0.05em' }}>Revenue Focus</span>
                 </div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '6px', color: '#111827' }}>Scale Top Performers</div>
-                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>Your top SKU alone drives Rs. {((topProducts[0]?.total_revenue || 0) / 1000000).toFixed(1)}M in revenue.<br /><strong style={{ color: '#111827', display: 'block', marginTop: '6px' }}>Decision: Reallocate ad budget to heavily promote proven top-sellers.</strong></div>
+                <div style={{ fontSize: '0.75rem', color: '#6b7280', lineHeight: '1.4' }}>Top SKU drives Rs. {((topProducts[0]?.total_revenue || 0) / 1000000).toFixed(1)}M in revenue.</div>
               </div>
             </div>
           </div>
@@ -804,6 +806,24 @@ const DonutChartsPage = ({ palette }) => {
 const DashboardOverview = ({ palette }) => {
   const colors = palette.colors;
 
+  const totalUnitsSold = topProducts.reduce((sum, p) => sum + Number(p.total_quantity_sold || 0), 0);
+  const activeWarehouses = warehouseSummary.length;
+
+  const healthLegend = [
+    { label: 'Good Performance', value: 5, color: '#10b981' },
+    { label: 'Needs Attention', value: 2, color: '#fbbf24' },
+    { label: 'Warning', value: 2, color: '#f97316' },
+    { label: 'Critical', value: 2, color: '#ef4444' }
+  ];
+
+  const metrics = [
+    { label: 'Total Orders', value: kpis.total_orders?.toLocaleString() },
+    { label: 'Total Revenue', value: `NPR ${(kpis.total_revenue / 1000000000).toFixed(2)}B` },
+    { label: 'Avg Order Value', value: `NPR ${Math.round(kpis.average_order_value || 0).toLocaleString()}` },
+    { label: 'Total Units Sold', value: totalUnitsSold.toLocaleString() },
+    { label: 'Active Warehouses', value: activeWarehouses }
+  ];
+
   const paretoOptions = (yTitle, color) => ({
     maintainAspectRatio: false,
     plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
@@ -817,25 +837,15 @@ const DashboardOverview = ({ palette }) => {
   return (
     <div className="container" style={{ minWidth: 0 }}>
       {/* Banner */}
-      <div className="banner" style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`, borderRadius: '16px', padding: '2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Platform Performance Dashboard <span style={{ fontSize: '0.7rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>LIVE</span></h2>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Data Source: <b>Production Database</b> • Environment: <b>Main</b> • Window: <b>Last 30 days</b></div>
-          <div style={{ fontSize: '0.85rem', opacity: 0.9, marginTop: '5px' }}>Total Orders: <b>{kpis.total_orders?.toLocaleString()}</b> • Revenue: <b>Rs. {kpis.total_revenue?.toLocaleString()}</b> • Fulfillment: <b>{kpis.fulfillment_rate}%</b></div>
-        </div>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '50%', border: `4px solid ${colors[2]}`, width: '110px', height: '110px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>{Math.round(kpis.fulfillment_rate || 0)}</div>
-            <div style={{ fontSize: '0.5rem', fontWeight: 700 }}>FULFILLMENT %</div>
-          </div>
-          <div style={{ fontSize: '0.7rem' }}>
-            <div style={{ color: '#ef4444' }}>● 3 Critical Alerts</div>
-            <div style={{ color: '#f59e0b' }}>● 4 High Priority</div>
-            <div style={{ color: '#fbbf24' }}>● 3 Medium</div>
-            <div style={{ color: colors[2] }}>● 2 Strengths</div>
-          </div>
-        </div>
-      </div>
+      <AnalyticsBanner 
+        title="Sales Performance"
+        subtitle1="Month-to-Date Analysis · April 2026"
+        subtitle2="Period: April 1 – April 28, 2026 · Currency: NPR"
+        metrics={metrics}
+        healthScore={72}
+        healthLegend={healthLegend}
+        colors={colors}
+      />
 
       {/* Finance Cards Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
@@ -1569,12 +1579,16 @@ const Sidebar = ({ activeTab, setActiveTab }) => (
     <div className="menu-section">
       <div className="menu-label">Navigation</div>
       <div className={`menu-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}><LayoutDashboard size={20} /> Dashboard Overview</div>
+      <div className={`menu-item ${activeTab === 'marketing' ? 'active' : ''}`} onClick={() => setActiveTab('marketing')}><TrendingUp size={20} /> Marketing</div>
+      <div className={`menu-item ${activeTab === 'driver' ? 'active' : ''}`} onClick={() => setActiveTab('driver')}><Truck size={20} /> Driver</div>
+      <div className={`menu-item ${activeTab === 'sales' ? 'active' : ''}`} onClick={() => setActiveTab('sales')}><ShoppingCart size={20} /> Sales</div>
+    </div>
+    <div className="menu-section">
+      <div className="menu-label">Charts</div>
       <div className={`menu-item ${activeTab === 'barchart' ? 'active' : ''}`} onClick={() => setActiveTab('barchart')}><BarChart2 size={20} /> Bar Chart</div>
       <div className={`menu-item ${activeTab === 'donutchart' ? 'active' : ''}`} onClick={() => setActiveTab('donutchart')}><PieIcon size={20} /> Donut Chart</div>
       <div className={`menu-item ${activeTab === 'linechart' ? 'active' : ''}`} onClick={() => setActiveTab('linechart')}><LineChart size={20} /> Line Chart</div>
       <div className={`menu-item ${activeTab === 'datastructure' ? 'active' : ''}`} onClick={() => setActiveTab('datastructure')}><TableIcon size={20} /> Data Structure</div>
-      <div className={`menu-item ${activeTab === 'marketing' ? 'active' : ''}`} onClick={() => setActiveTab('marketing')}><TrendingUp size={20} /> Marketing</div>
-      <div className={`menu-item ${activeTab === 'driver' ? 'active' : ''}`} onClick={() => setActiveTab('driver')}><Truck size={20} /> Driver</div>
     </div>
     <div style={{ marginTop: 'auto' }}><div className="menu-item"><Settings size={20} /> Settings</div></div>
   </div>
@@ -1613,6 +1627,7 @@ const Dashboard = () => {
         {activeTab === 'datastructure' && <DataStructurePage palette={activePalette} />}
         {activeTab === 'marketing' && <MarketingPage palette={activePalette} />}
         {activeTab === 'driver' && <DriverPage palette={activePalette} />}
+        {activeTab === 'sales' && <SalesPage palette={activePalette} />}
       </div>
     </div>
   );
