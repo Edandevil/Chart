@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import MarketingPage from './MarketingPage';
 import DriverPage from './DriverPage';
 import SalesPage from './SalesPage';
+import ChartListPage from './ChartListPage';
 import AnalyticsBanner from './AnalyticsBanner';
 import {
   Chart as ChartJS,
@@ -21,7 +22,7 @@ import { Line, Bar, Pie, Doughnut, Radar, Scatter, Bubble, PolarArea } from 'rea
 import {
   LayoutDashboard, Table as TableIcon, PieChart as PieIcon, TrendingUp,
   Settings, Download, RefreshCw, Pin, X, ChevronDown,
-  Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight,
+  Search, Bell, User, BarChart2, AlertCircle, CheckCircle2, ArrowRight, Grid,
   Palette as PaletteIcon, Plus, Trash2, Edit3, Save, Check, MousePointer2, ExternalLink,
   Wallet, Activity, Target, Heart, Footprints, Flame, Moon, Smile, Scale, Calendar, Droplets, Dumbbell,
   Clock, LineChart, Truck, ShoppingCart
@@ -817,11 +818,11 @@ const DashboardOverview = ({ palette }) => {
   ];
 
   const metrics = [
-    { label: 'Total Orders', value: kpis.total_orders?.toLocaleString() },
-    { label: 'Total Revenue', value: `NPR ${(kpis.total_revenue / 1000000000).toFixed(2)}B` },
-    { label: 'Avg Order Value', value: `NPR ${Math.round(kpis.average_order_value || 0).toLocaleString()}` },
-    { label: 'Total Units Sold', value: totalUnitsSold.toLocaleString() },
-    { label: 'Active Warehouses', value: activeWarehouses }
+    { label: 'Total Orders', value: (kpis.total_orders || 0).toLocaleString() },
+    { label: 'Total Revenue', value: (kpis.total_revenue || 0) > 1000000 ? `Rs. ${(kpis.total_revenue / 1000000).toFixed(2)}M` : `Rs. ${(kpis.total_revenue || 0).toLocaleString()}` },
+    { label: 'Avg Order Value', value: `Rs. ${Math.round(kpis.average_order_value || 0).toLocaleString()}` },
+    { label: 'Total Units Sold', value: (totalUnitsSold || 0).toLocaleString() },
+    { label: 'Active Warehouses', value: activeWarehouses || 0 }
   ];
 
   const paretoOptions = (yTitle, color) => ({
@@ -1585,6 +1586,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => (
     </div>
     <div className="menu-section">
       <div className="menu-label">Charts</div>
+      <div className={`menu-item ${activeTab === 'chartlist' ? 'active' : ''}`} onClick={() => setActiveTab('chartlist')}><Grid size={20} /> Chart List</div>
       <div className={`menu-item ${activeTab === 'barchart' ? 'active' : ''}`} onClick={() => setActiveTab('barchart')}><BarChart2 size={20} /> Bar Chart</div>
       <div className={`menu-item ${activeTab === 'donutchart' ? 'active' : ''}`} onClick={() => setActiveTab('donutchart')}><PieIcon size={20} /> Donut Chart</div>
       <div className={`menu-item ${activeTab === 'linechart' ? 'active' : ''}`} onClick={() => setActiveTab('linechart')}><LineChart size={20} /> Line Chart</div>
@@ -1628,6 +1630,7 @@ const Dashboard = () => {
         {activeTab === 'marketing' && <MarketingPage palette={activePalette} />}
         {activeTab === 'driver' && <DriverPage palette={activePalette} />}
         {activeTab === 'sales' && <SalesPage palette={activePalette} />}
+        {activeTab === 'chartlist' && <ChartListPage palette={activePalette} />}
       </div>
     </div>
   );
