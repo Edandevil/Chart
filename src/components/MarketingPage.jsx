@@ -4,16 +4,7 @@ import realData from '../data.json';
 import AnalyticsBanner from './AnalyticsBanner';
 import { TrendingUp, TrendingDown, Users, Gift, ShoppingCart, CreditCard, MapPin, Star } from 'lucide-react';
 
-const KPICard = ({ label, value, sub, color, icon }) => (
-  <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
-      <div style={{ width: 36, height: 36, borderRadius: '10px', background: `${color}22`, color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</div>
-    </div>
-    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#111827' }}>{value}</div>
-    <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{sub}</div>
-  </div>
-);
+import KPICard from './shared/KPICard';
 
 const MarketingPage = ({ palette }) => {
   const timePeriod = 'last_month';
@@ -72,7 +63,7 @@ const MarketingPage = ({ palette }) => {
       />
 
       {/* KPI Cards Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
+      <div className="kpi-grid-4">
         <KPICard label="Total Customers" value={(customerHealth.total_customers || 0).toLocaleString()} sub={`${customerHealth.active_customers || 0} active • ${customerHealth.email_verification_rate || 0}% verified`} color={colors[0]} icon={<Users size={18}/>} />
         <KPICard label="Campaign Inventory" value={totalCampaigns.toLocaleString()} sub={`${(campaigns[0]?.active_count || 0)} coupons • ${(campaigns[1]?.active_count || 0)} offers active`} color={colors[1]} icon={<Gift size={18}/>} />
         <KPICard label="Cart Abandonment" value={`${cartAbandonment.abandonment_rate_pct || 0}%`} sub={`Rs. ${((cartAbandonment.abandoned_cart_value || 0)/1000000).toFixed(1)}M lost value`} color="#ef4444" icon={<ShoppingCart size={18}/>} />
@@ -80,8 +71,8 @@ const MarketingPage = ({ palette }) => {
       </div>
 
       {/* Customer Health + Campaign Inventory */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
-        <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
+      <div className="chart-row-3">
+        <div className="section-panel">
           <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>Customer Verification</h3>
           <div style={{ height: 180 }}>
             <Doughnut key={palette.id} data={{ labels: customerStatus.map(s => `${s.is_active ? 'Active' : 'Inactive'} / ${s.is_verified ? 'Verified' : 'Unverified'}`), datasets: [{ data: customerStatus.map(s => s.customer_count || 0), backgroundColor: [colors[0], colors[3], colors[1], colors[2]], borderWidth: 3, borderColor: '#fff', cutout: '68%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} />
@@ -89,16 +80,16 @@ const MarketingPage = ({ palette }) => {
           <div style={{ marginTop: '12px', fontSize: '0.75rem', color: '#6b7280', textAlign: 'center' }}>{customerHealth.email_verification_rate || 0}% email-verified</div>
         </div>
 
-        <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>Campaign Inventory</h3>
+        <div className="section-panel">
+          <h3 className="panel-title">Campaign Inventory</h3>
           <div style={{ height: 180 }}>
             <Bar key={palette.id} data={{ labels: campaigns.map(c => c.campaign_type), datasets: [{ data: campaigns.map(c => c.active_count || 0), backgroundColor: colors, borderRadius: 6 }] }} options={{ ...chartOpts(false), plugins: { legend: { display: false } } }} />
           </div>
           <div style={{ marginTop: '12px', fontSize: '0.75rem', color: '#6b7280', textAlign: 'center' }}>Total: {totalCampaigns} campaigns active</div>
         </div>
 
-        <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>Customer Groups</h3>
+        <div className="section-panel">
+          <h3 className="panel-title">Customer Groups</h3>
           <div style={{ height: 180 }}>
             <Doughnut key={palette.id} data={{ labels: customerGroups.map(g => g.group_name), datasets: [{ data: customerGroups.map(g => g.member_count || 0), backgroundColor: colors, borderWidth: 3, borderColor: '#fff', cutout: '68%' }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }} />
           </div>

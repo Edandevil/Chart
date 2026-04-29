@@ -8,16 +8,7 @@ import {
   CreditCard, Store, ArrowRight
 } from 'lucide-react';
 
-const KPICard = ({ label, value, sub, color, icon }) => (
-  <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
-      <div style={{ width: 36, height: 36, borderRadius: '10px', background: `${color}22`, color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</div>
-    </div>
-    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#111827' }}>{value}</div>
-    <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{sub}</div>
-  </div>
-);
+import KPICard from './shared/KPICard';
 
 const SalesPage = ({ palette }) => {
   const timePeriod = 'last_month';
@@ -60,7 +51,7 @@ const SalesPage = ({ palette }) => {
       />
 
       {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
+      <div className="kpi-grid-3">
         <KPICard label="Gross Revenue" value={(kpis.total_revenue || 0) > 1000000 ? `Rs. ${(kpis.total_revenue / 1000000).toFixed(2)}M` : `Rs. ${(kpis.total_revenue || 0).toLocaleString()}`} sub="Total revenue for the period" color={colors[0]} icon={<DollarSign size={18}/>} />
         <KPICard label="Order Fulfillment" value={`${kpis.fulfillment_rate || 0}%`} sub={`${(kpis.delivered_orders || 0).toLocaleString()} orders delivered`} color={colors[2]} icon={<Package size={18}/>} />
         <KPICard label="Avg Order Value" value={`Rs. ${Math.round(kpis.average_order_value || 0).toLocaleString()}`} sub="Per unique transaction" color="#f59e0b" icon={<TrendingUp size={18}/>} />
@@ -68,7 +59,7 @@ const SalesPage = ({ palette }) => {
 
       {/* Charts Row 1 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '20px', marginBottom: '20px', minWidth: 0 }}>
-        <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
+        <div className="section-panel">
           <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.5rem' }}>Daily Revenue Trends (Last 10 Days)</h3>
           <div style={{ height: 260 }}>
             <Line 
@@ -98,8 +89,8 @@ const SalesPage = ({ palette }) => {
           </div>
         </div>
 
-        <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.5rem' }}>Warehouse Revenue Share</h3>
+        <div className="section-panel">
+          <h3 className="panel-title-lg">Warehouse Revenue Share</h3>
           <div style={{ height: 260 }}>
             <Doughnut 
               key={palette.id}
@@ -124,7 +115,7 @@ const SalesPage = ({ palette }) => {
 
       {/* Table Row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr', gap: '20px', minWidth: 0 }}>
-        <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
+        <div className="section-panel">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>Top Performing Products</h3>
             <span style={{ fontSize: '0.75rem', color: colors[0], fontWeight: 600, cursor: 'pointer' }}>View All Report <ArrowRight size={14} style={{ verticalAlign: 'middle' }} /></span>
@@ -157,8 +148,8 @@ const SalesPage = ({ palette }) => {
           </div>
         </div>
 
-        <div className="section-panel" style={{ padding: '1.5rem', marginBottom: 0 }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1.5rem' }}>Payment Method Breakdown</h3>
+        <div className="section-panel">
+          <h3 className="panel-title-lg">Payment Method Breakdown</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {paymentChannel.map((pm, i) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
